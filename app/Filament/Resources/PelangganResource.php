@@ -45,7 +45,7 @@ class PelangganResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id_pelanggan')->label('Id')->sortable(),
-                TextColumn::make('nama_pelanggan')->label('Nama Pelanggan')->searchable(),
+                TextColumn::make('nama_pelanggan')->label('Nama Pelanggann')->searchable(),
                 TextColumn::make('alamat')->label('Alamat')->limit(30),
                 TextColumn::make('nomor_hp')->label('Nomor HP'),
             ])
