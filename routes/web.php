@@ -19,4 +19,4 @@ Route::get('/hi', function () {
 
 use App\Http\Controllers\PelangganController;
 
-Route::resource('pelanggan', PelangganController::class);
+Route::resource('pelang', PelangganController::class);
