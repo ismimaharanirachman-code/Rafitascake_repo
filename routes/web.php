@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/lol', function () {
+Route::get('/hai', function () {
     return view('welcome');
 });
 
