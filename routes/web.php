@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/halo', function () {
+Route::get('/lol', function () {
     return view('welcome');
 });
 
 use App\Http\Controllers\PelangganController;
 
-Route::resource('pelanggan', PelangganController::class);
+Route::resource('pelang', PelangganController::class);
