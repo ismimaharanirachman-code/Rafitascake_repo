@@ -13,10 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/hi', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
 use App\Http\Controllers\PelangganController;
-
 Route::resource('pelanggan', PelangganController::class);
+
+
+use App\Http\Controllers\SupplierController;
+Route::resource('supplier', SupplierController::class);
+
