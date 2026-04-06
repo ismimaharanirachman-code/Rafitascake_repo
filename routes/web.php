@@ -24,4 +24,3 @@ Route::resource('pelanggan', PelangganController::class);
 use App\Http\Controllers\SupplierController;
 Route::resource('supplier', SupplierController::class);
 
-

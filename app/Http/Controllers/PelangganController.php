@@ -13,7 +13,6 @@ class PelangganController extends Controller
     { 
         $pelanggan = Pelanggan::all();
         return view('pelanggan.view',compact('pelanggan'));
-    
     }
 
     /**
