@@ -29,3 +29,5 @@ Route::resource('supplier', SupplierController::class);
 use App\Http\Controllers\PegawaiController;
 Route::resource('Pegawai', PegawaiController::class);
 
+use App\Http\Controllers\CoaController;
+Route::resource('coa', CoaController::class);
