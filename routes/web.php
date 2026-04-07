@@ -20,3 +20,7 @@ Route::get('/hai', function () {
 use App\Http\Controllers\PelangganController;
 
 Route::resource('pelanggan', PelangganController::class);
+
+use App\Http\Controllers\CoaController;
+
+Route::resource('coa', CoaController::class);
