@@ -20,7 +20,8 @@ Route::get('/', function () {
 use App\Http\Controllers\PelangganController;
 Route::resource('pelanggan', PelangganController::class);
 
-
 use App\Http\Controllers\SupplierController;
 Route::resource('supplier', SupplierController::class);
 
+use App\Http\Controllers\PegawaiController;
+Route::resource('Pegawai', PegawaiController::class);
