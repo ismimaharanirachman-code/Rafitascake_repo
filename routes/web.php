@@ -19,4 +19,8 @@ Route::get('/lol', function () {
 
 use App\Http\Controllers\PelangganController;
 
-Route::resource('pelang', PelangganController::class);
+Route::resource('pelanggan', PelangganController::class); 
+
+use App\Http\Controllers\BahanBakuController;
+
+Route::resource('BahanBaku', BahanBakuController::class); 
