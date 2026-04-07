@@ -13,14 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/halo', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
 use App\Http\Controllers\PelangganController;
-
 Route::resource('pelanggan', PelangganController::class);
 
-use App\Http\Controllers\PegawaiController;
+use App\Http\Controllers\SupplierController;
+Route::resource('supplier', SupplierController::class);
 
+use App\Http\Controllers\PegawaiController;
 Route::resource('Pegawai', PegawaiController::class);
