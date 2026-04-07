@@ -3,16 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pelanggan;
-class PelangganController extends Controller
+
+class BahanBakuController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    { 
-        $pelanggan = Pelanggan::all();
-        return view('pelanggan.view',compact('pelanggan'));
+    {
+        //
     }
 
     /**
