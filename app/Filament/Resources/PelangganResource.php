@@ -4,12 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PelangganResource\Pages;
 use App\Models\Pelanggan;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
-// Import komponen biar nggak error merah
+
+// Components
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
@@ -18,23 +17,24 @@ class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users'; // Icon pelanggan
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+
+    protected static ?string $navigationLabel = 'Pelanggan';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('id_pelanggan')
-                    ->label('id Pelanggan')
-                    ->required(),
                 TextInput::make('nama_pelanggan')
-                    ->label('nama Pelanggan')
+                    ->label('Nama Pelanggan')
                     ->required(),
+
                 Textarea::make('alamat')
-                    ->label('alamat')
+                    ->label('Alamat')
                     ->required(),
+
                 TextInput::make('nomor_hp')
-                    ->label('nomor hp')
+                    ->label('Nomor HP')
                     ->tel()
                     ->required(),
             ]);
@@ -44,18 +44,28 @@ class PelangganResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id_pelanggan')->label('Id')->sortable(),
-                TextColumn::make('nama_pelanggan')->label('Nama Pelanggann')->searchable(),
-                TextColumn::make('alamat')->label('Alamat')->limit(30),
-                TextColumn::make('nomor_hp')->label('Nomor HP'),
+                TextColumn::make('id_pelanggan')
+                    ->label('ID')
+                    ->sortable(),
+
+                TextColumn::make('nama_pelanggan')
+                    ->label('Nama Pelanggan')
+                    ->searchable(),
+
+                TextColumn::make('alamat')
+                    ->label('Alamat')
+                    ->wrap(),
+
+                TextColumn::make('nomor_hp')
+                    ->label('Nomor HP'),
             ])
             ->filters([])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                \Filament\Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                \Filament\Tables\Actions\BulkActionGroup::make([
+                    \Filament\Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
