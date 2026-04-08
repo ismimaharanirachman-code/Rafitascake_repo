@@ -49,8 +49,8 @@ class BahanBakuResource extends Resource
                     Forms\Components\TextInput::make('harga')
                         ->label('Harga Per Satuan')
                         ->numeric()
-                        ->prefix('Rp')
-                        ->required(),
+                        ->prefix('Rp'),
+                    
                 ])
                 ->columns(2), // Membuat inputan jadi 2 kolom agar rapi
         ]);
