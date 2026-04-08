@@ -74,7 +74,7 @@ class PelangganResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPelanggan::route('/'),
+            'index' => Pages\ListPelanggans::route('/'),
             'create' => Pages\CreatePelanggan::route('/create'),
             'edit' => Pages\EditPelanggan::route('/{record}/edit'),
         ];
