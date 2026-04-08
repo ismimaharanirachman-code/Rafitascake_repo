@@ -38,7 +38,8 @@ class PegawaiResource extends Resource
                 ->maxLength(100),
             Forms\Components\TextInput::make('no_hp')
                 ->required()
-                ->maxLength(20),
+                ->minLength(12)
+                ->maxLength(12),
         ]);
 }
 
