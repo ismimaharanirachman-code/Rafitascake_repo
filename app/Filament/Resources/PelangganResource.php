@@ -27,16 +27,19 @@ class PelangganResource extends Resource
             ->schema([
                 TextInput::make('nama_pelanggan')
                     ->label('Nama Pelanggan')
-                    ->required(),
+                    ->required()
+                    ->maxLength(100),
 
                 Textarea::make('alamat')
                     ->label('Alamat')
-                    ->required(),
+                    ->required()
+                    ->rows(3),
 
                 TextInput::make('nomor_hp')
                     ->label('Nomor HP')
                     ->tel()
-                    ->required(),
+                    ->required()
+                    ->maxLength(15),
             ]);
     }
 
@@ -45,12 +48,14 @@ class PelangganResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id_pelanggan')
-                    ->label('ID')
+                    ->label('Kode Pelanggan')
+                    ->formatStateUsing(fn ($state) => 'P' . str_pad($state, 3, '0', STR_PAD_LEFT))
                     ->sortable(),
 
                 TextColumn::make('nama_pelanggan')
                     ->label('Nama Pelanggan')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('alamat')
                     ->label('Alamat')
@@ -62,7 +67,7 @@ class PelangganResource extends Resource
             ->filters([])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),
-                    \Filament\Tables\Actions\DeleteAction::make(),
+                \Filament\Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 \Filament\Tables\Actions\BulkActionGroup::make([
