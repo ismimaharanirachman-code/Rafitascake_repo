@@ -62,11 +62,11 @@ class PelangganResource extends Resource
             ->filters([])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),
-                    \Filament\Tables\Actions\DeleteBulkAction::make(),
+                    \Filament\Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 \Filament\Tables\Actions\BulkActionGroup::make([
-                    
+                    \Filament\Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

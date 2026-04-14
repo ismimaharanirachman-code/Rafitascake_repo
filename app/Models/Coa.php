@@ -16,5 +16,6 @@ class Coa extends Model
         'kode_akun',
         'nama_akun',
         'tipe_akun',
+        
     ];
 }
