@@ -13,6 +13,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 
+// ✅ Actions (WAJIB)
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\BulkActionGroup;
+
 class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
@@ -27,19 +33,16 @@ class PelangganResource extends Resource
             ->schema([
                 TextInput::make('nama_pelanggan')
                     ->label('Nama Pelanggan')
-                    ->required()
-                    ->maxLength(100),
+                    ->required(),
 
                 Textarea::make('alamat')
                     ->label('Alamat')
-                    ->required()
-                    ->rows(3),
+                    ->required(),
 
                 TextInput::make('nomor_hp')
                     ->label('Nomor HP')
                     ->tel()
-                    ->required()
-                    ->maxLength(15),
+                    ->required(),
             ]);
     }
 
@@ -54,8 +57,7 @@ class PelangganResource extends Resource
 
                 TextColumn::make('nama_pelanggan')
                     ->label('Nama Pelanggan')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
 
                 TextColumn::make('alamat')
                     ->label('Alamat')
@@ -66,12 +68,12 @@ class PelangganResource extends Resource
             ])
             ->filters([])
             ->actions([
-                \Filament\Tables\Actions\EditAction::make(),
-                \Filament\Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                \Filament\Tables\Actions\BulkActionGroup::make([
-                    \Filament\Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
