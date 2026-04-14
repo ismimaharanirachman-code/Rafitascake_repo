@@ -12,8 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('coas', function (Blueprint $table) {
-            $table->id();
-            $table->string('kode_akun');
+            $table->string('kode_akun')->primary();
             $table->string('nama_akun');
             $table->string('tipe_akun');
             $table->timestamps();
