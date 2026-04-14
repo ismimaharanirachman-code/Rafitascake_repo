@@ -12,10 +12,14 @@ class Coa extends Model
     protected $table = 'coas'; // Sesuaikan dengan nama tabel di file migrasi
 
     // Daftarkan semua atribut agar bisa disimpan ke database
-    protected $fillable = [
-        'kode_akun',
-        'nama_akun',
-        'tipe_akun',
-        
-    ];
+   protected $primaryKey = 'kode_akun';
+   public $incrementing = false;
+   protected $keyType = 'string';
+
+   protected $fillable = [
+    'kode_akun', 
+    'nama_akun', // Tambahkan kolom lain yang ingin kamu izinkan juga
+    'tipe_akun',
+];
+
 }
