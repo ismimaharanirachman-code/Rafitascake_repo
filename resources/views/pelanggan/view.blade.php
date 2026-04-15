@@ -1,7 +1,7 @@
 <h1>Data Pelanggan</h1>
 
 <a href="/pelanggan/create">Tambah Pelanggan</a>
-
+//
 <br><br>
 
 @foreach ($pelanggan as $s)
