@@ -1,5 +1,5 @@
 <h1>Data Bahan Baku</h1>
-
+//
 <a href="{{ route('bahan-baku.create') }}">Tambah</a>
 
 <table border="1">
