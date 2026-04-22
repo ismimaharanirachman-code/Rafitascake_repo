@@ -1,7 +1,7 @@
 <h1>Data Pegawai</h1>
 
 <a href="/Pegawai/create">Tambah Pegawai</a>
-
+//
 <br><br>
 
 @foreach ($pegawai as $s)
