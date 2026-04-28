@@ -6,7 +6,7 @@ use App\Filament\Resources\ProdukResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListProduks extends ListRecords
+class ListProduk extends ListRecords
 {
     protected static string $resource = ProdukResource::class;
 
