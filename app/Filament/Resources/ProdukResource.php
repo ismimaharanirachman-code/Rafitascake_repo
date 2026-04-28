@@ -88,7 +88,7 @@ class ProdukResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProduks::route('/'),
+            'index' => Pages\ListProduk::route('/'),
             'create' => Pages\CreateProduk::route('/create'),
             'edit' => Pages\EditProduk::route('/{record}/edit'),
         ];
