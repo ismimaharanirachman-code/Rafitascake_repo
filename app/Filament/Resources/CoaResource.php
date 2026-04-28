@@ -18,7 +18,15 @@ class CoaResource extends Resource
 {
     protected static ?string $model = Coa::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
+    protected static ?string $navigationGroup = 'Master Data';
+
+    protected static ?string $navigationLabel = 'Coa';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Coa';
+    protected static ?string $pluralModelLabel = 'Coa';
 
     public static function form(Form $form): Form
     {
