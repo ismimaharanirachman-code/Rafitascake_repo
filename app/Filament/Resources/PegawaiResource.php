@@ -4,10 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PegawaiResource\Pages;
 use App\Models\Pegawai;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
 use Filament\Tables\Table;
 
 // Components
@@ -18,42 +16,46 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\BulkActionGroup;
 
 class PegawaiResource extends Resource
 {
     protected static ?string $model = Pegawai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     protected static ?string $navigationLabel = 'Pegawai';
 
+    protected static ?string $navigationGroup = 'Master Data';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Pegawai';
+    protected static ?string $pluralModelLabel = 'Pegawai';
+
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('nama_pegawai')
-                    ->label('Nama Pegawai')
-                    ->required()
-                    ->maxLength(50),
+        return $form->schema([
+            TextInput::make('nama_pegawai')
+                ->label('Nama Pegawai')
+                ->required()
+                ->maxLength(50),
 
-                TextInput::make('jabatan')
-                    ->label('Jabatan')
-                    ->required()
-                    ->maxLength(50),
+            TextInput::make('jabatan')
+                ->label('Jabatan')
+                ->required()
+                ->maxLength(50),
 
-                TextInput::make('alamat_pegawai')
-                    ->label('Alamat')
-                    ->required()
-                    ->maxLength(100),
+            TextInput::make('alamat_pegawai')
+                ->label('Alamat')
+                ->required()
+                ->maxLength(100),
 
-                TextInput::make('no_hp')
-                    ->label('No HP')
-                    ->tel()
-                    ->required()
-                    ->minLength(10)
-                    ->maxLength(15),
-            ]);
+            TextInput::make('no_hp')
+                ->label('No HP')
+                ->tel()
+                ->required()
+                ->minLength(10)
+                ->maxLength(15),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -85,10 +87,8 @@ class PegawaiResource extends Resource
                 DeleteAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
-            ]);
+                DeleteBulkAction::make(),
+            ]); // ⬅️ ini disederhanakan (hindari error BulkActionGroup)
     }
 
     public static function getRelations(): array
