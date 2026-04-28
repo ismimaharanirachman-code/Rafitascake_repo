@@ -73,7 +73,7 @@ class SupplierResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuppliers::route('/'),
+            'index' => Pages\ListSupplier::route('/'),
             'create' => Pages\CreateSupplier::route('/create'),
           
         ];

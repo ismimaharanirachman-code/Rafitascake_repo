@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($suppliers as $s)
+        @foreach($supplier as $s)
         <tr>
             <td>{{ $s->nama_supplier }}</td>
             <td>{{ $s->no_telepon }}</td>
