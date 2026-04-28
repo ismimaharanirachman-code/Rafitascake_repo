@@ -34,6 +34,11 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Pink,
                 
             ])
+            ->renderHook(
+            PanelsRenderHook::HEAD_END,
+            fn (): string => Blade::render('<style> body { background-color: #f6e0ec !important; } </style>')
+            
+        )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([

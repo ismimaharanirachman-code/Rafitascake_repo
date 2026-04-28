@@ -27,6 +27,12 @@ class PelangganResource extends Resource
 
     protected static ?string $navigationLabel = 'Pelanggan';
 
+    protected static ?string $navigationGroup = 'Master Data';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Pelanggan';
+    protected static ?string $pluralModelLabel = 'Pelanggan';
+
     public static function form(Form $form): Form
     {
         return $form

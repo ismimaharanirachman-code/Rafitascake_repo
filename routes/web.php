@@ -31,3 +31,6 @@ Route::resource('Pegawai', PegawaiController::class);
 
 use App\Http\Controllers\CoaController;
 Route::resource('coa', CoaController::class);
+
+use App\Http\Controllers\ProdukController;
+Route::resource('Produk', ProdukController::class);
