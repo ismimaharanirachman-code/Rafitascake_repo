@@ -1,5 +1,5 @@
 <?php
-//
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bahan_bakus', function (Blueprint $table) {
-        $table->id();
-        $table->string('nama_bahan');
-        $table->integer('stok');
-        $table->string('satuan'); // contoh: kg, gram, pcs
-        $table->integer('harga');
-        $table->timestamps();
+        Schema::create('pembelian_bahan_baku', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bahan_bakus');
+        Schema::dropIfExists('pembelian_bahan_baku');
     }
 };

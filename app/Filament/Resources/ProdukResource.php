@@ -27,6 +27,13 @@ class ProdukResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cake'; // Icon kue
 
+    protected static ?string $navigationGroup = 'Master Data';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Produk';
+    protected static ?string $pluralModelLabel = 'Produk';
+
+
     public static function form(Form $form): Form
     {
         return $form
@@ -88,7 +95,7 @@ class ProdukResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListProduks::route('/'),
+            'index' => Pages\ListProduk::route('/'),
             'create' => Pages\CreateProduk::route('/create'),
             'edit' => Pages\EditProduk::route('/{record}/edit'),
         ];

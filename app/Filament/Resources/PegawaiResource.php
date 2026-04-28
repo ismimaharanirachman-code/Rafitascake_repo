@@ -3,77 +3,103 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PegawaiResource\Pages;
-use App\Filament\Resources\PegawaiResource\RelationManagers;
 use App\Models\Pegawai;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+// Components
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+
+// Actions
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\BulkActionGroup;
 
 class PegawaiResource extends Resource
 {
     protected static ?string $model = Pegawai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
-   public static function form(Form $form): Form
-{
-    return $form
-        ->schema([
-            // Tambahkan inputan sesuai kolom di database kamu
-            Forms\Components\TextInput::make('id_pegawai')
-                ->required()
-                ->maxLength(10),
-            Forms\Components\TextInput::make('nama_pegawai')
-                ->required()
-                ->maxLength(50),
-            Forms\Components\TextInput::make('jabatan')
-                ->required()
-                ->maxLength(50),
-            Forms\Components\TextInput::make('alamat_pegawai')
-                ->required()
-                ->maxLength(100),
-            Forms\Components\TextInput::make('no_hp')
-                ->required()
-                ->maxLength(20),
-        ]);
-}
+    protected static ?string $navigationLabel = 'Pegawai';
+
+    protected static ?string $navigationGroup = 'Master Data';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Pegawai';
+    protected static ?string $pluralModelLabel = 'Pegawai';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                TextInput::make('nama_pegawai')
+                    ->label('Nama Pegawai')
+                    ->required()
+                    ->maxLength(50),
+
+                TextInput::make('jabatan')
+                    ->label('Jabatan')
+                    ->required()
+                    ->maxLength(50),
+
+                TextInput::make('alamat_pegawai')
+                    ->label('Alamat')
+                    ->required()
+                    ->maxLength(100),
+
+                TextInput::make('no_hp')
+                    ->label('No HP')
+                    ->tel()
+                    ->required()
+                    ->minLength(10)
+                    ->maxLength(15),
+            ]);
+    }
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            // Tambahkan kolom-kolom yang ingin kamu tampilkan di tabel
-            Tables\Columns\TextColumn::make('id_pegawai')
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('nama_pegawai')
-                ->sortable()
-                ->searchable(),
-            Tables\Columns\TextColumn::make('jabatan')
-                ->sortable(),
-            Tables\Columns\TextColumn::make('alamat_pegawai'),
-            Tables\Columns\TextColumn::make('no_hp'),
-        ])
-        ->filters([
-            //
-        ])
-        ->actions([
-            Tables\Actions\EditAction::make(),
-        ])
-        ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make(),
-        ]);
-}
+    {
+        return $table
+            ->columns([
+                TextColumn::make('id_pegawai')
+                    ->label('Kode Pegawai')
+                    ->formatStateUsing(fn ($state) => 'PG' . str_pad($state, 3, '0', STR_PAD_LEFT))
+                    ->sortable(),
+
+                TextColumn::make('nama_pegawai')
+                    ->label('Nama Pegawai')
+                    ->searchable(),
+
+                TextColumn::make('jabatan')
+                    ->label('Jabatan'),
+
+                TextColumn::make('alamat_pegawai')
+                    ->label('Alamat')
+                    ->wrap(),
+
+                TextColumn::make('no_hp')
+                    ->label('No HP'),
+            ])
+            ->filters([])
+            ->actions([
+                EditAction::make(),
+                DeleteAction::make(),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

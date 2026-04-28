@@ -1,5 +1,5 @@
 <?php
-
+//
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pelanggan', function (Blueprint $table) {
-            $table->id('id_pelanggan',10);
-            $table->string('nama_pelanggan',50);
-            $table->string('alamat',100);
-            $table->string('nomor_hp',15);
-            $table->timestamps();
-        });
+        Schema::create('pegawais', function (Blueprint $table) {
+    $table->string('kode_pegawai', 10)->primary(); // ganti di sini
+    
+    $table->string('nama_pegawai', 50);
+    $table->string('jabatan', 50);
+    $table->string('alamat_pegawai', 100);
+    $table->string('no_hp', 20);
+    
+    $table->timestamps();
+});
     }
 
     /**

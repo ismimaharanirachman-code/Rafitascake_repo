@@ -13,6 +13,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 
+// ✅ Actions (WAJIB)
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\BulkActionGroup;
+
 class PelangganResource extends Resource
 {
     protected static ?string $model = Pelanggan::class;
@@ -20,6 +26,12 @@ class PelangganResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $navigationLabel = 'Pelanggan';
+
+    protected static ?string $navigationGroup = 'Master Data';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Pelanggan';
+    protected static ?string $pluralModelLabel = 'Pelanggan';
 
     public static function form(Form $form): Form
     {
@@ -45,7 +57,8 @@ class PelangganResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id_pelanggan')
-                    ->label('ID')
+                    ->label('Kode Pelanggan')
+                    ->formatStateUsing(fn ($state) => 'P' . str_pad($state, 3, '0', STR_PAD_LEFT))
                     ->sortable(),
 
                 TextColumn::make('nama_pelanggan')
@@ -61,11 +74,12 @@ class PelangganResource extends Resource
             ])
             ->filters([])
             ->actions([
-                \Filament\Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                \Filament\Tables\Actions\BulkActionGroup::make([
-                    \Filament\Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

@@ -18,14 +18,36 @@ class CoaResource extends Resource
 {
     protected static ?string $model = Coa::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
+    protected static ?string $navigationGroup = 'Master Data';
+
+    protected static ?string $navigationLabel = 'Coa';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Coa';
+    protected static ?string $pluralModelLabel = 'Coa';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('kode_akun')
-                    ->required(),
+    ->required()
+    ->reactive()
+    ->afterStateUpdated(function ($state, callable $set) {
+        if (str_starts_with($state, '1')) {
+            $set('tipe_akun', 'Harta');
+        } elseif (str_starts_with($state, '2')) {
+            $set('tipe_akun', 'Utang');
+        } elseif (str_starts_with($state, '3')) {
+            $set('tipe_akun', 'Modal');
+        } elseif (str_starts_with($state, '4')) {
+            $set('tipe_akun', 'Pendapatan');
+        } elseif (str_starts_with($state, '5')) {
+            $set('tipe_akun', 'Beban');
+        }
+    }),
                 TextInput::make('nama_akun')
                     ->required(),
                 Select::make('tipe_akun')
