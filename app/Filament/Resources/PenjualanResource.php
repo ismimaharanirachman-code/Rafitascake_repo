@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PenjualanResource extends Resource
 {
@@ -343,6 +344,28 @@ Forms\Components\Section::make('Total')
 public static function table(Table $table): Table
 {
     return $table
+    ->headerActions([
+
+    Tables\Actions\Action::make('download_pdf')
+        ->label('Unduh PDF')
+        ->icon('heroicon-o-document-arrow-down')
+        ->color('danger')
+
+        ->action(function () {
+
+            $penjualan = \App\Models\Penjualan::all();
+
+            $pdf = Pdf::loadView('pdf.penjualan', [
+                'penjualan' => $penjualan
+            ]);
+
+            return response()->streamDownload(
+                fn () => print($pdf->output()),
+                'laporan-penjualan.pdf'
+            );
+        }),
+
+])
         ->columns([
 
             Tables\Columns\TextColumn::make('no_nota')
@@ -382,6 +405,22 @@ public static function table(Table $table): Table
 
     Tables\Actions\EditAction::make(),
     Tables\Actions\DeleteAction::make(),
+    Tables\Actions\Action::make('invoice')
+    ->label('Invoice')
+    ->icon('heroicon-o-document-arrow-down')
+    ->color('success')
+
+    ->action(function ($record) {
+
+        $pdf = Pdf::loadView('pdf.invoice', [
+            'penjualan' => $record
+        ]);
+
+        return response()->streamDownload(
+            fn () => print($pdf->output()),
+            'invoice-' . $record->no_nota . '.pdf'
+        );
+    }),
 ])
 
 ->bulkActions([
