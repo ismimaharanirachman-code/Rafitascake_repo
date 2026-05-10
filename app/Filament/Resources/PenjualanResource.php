@@ -307,37 +307,6 @@ Forms\Components\Section::make('Total')
 
     ]),
 
-    //Totall Harga
-        Forms\Components\Section::make('Total')
-            ->schema([
-
-                Forms\Components\Hidden::make('total_harga')
-                ->dehydrated(true),
-
-                Forms\Components\Placeholder::make('total_display')
-                    ->label('Total Harga')
-                    ->content(function ($get) {
-
-                        $total = number_format($get('total_harga') ?? 0, 0, ',', '.');
-
-                        return new \Illuminate\Support\HtmlString("
-                            <div style='
-                                background:#fdf2f8;
-                                padding:16px;
-                                border-radius:12px;
-                                border:2px solid #ec4899;
-                                font-size:28px;
-                                font-weight:bold;
-                                color:#be185d;
-                                text-align:center;
-                            '>
-                                Rp {$total}
-                            </div>
-                        ");
-                    }),
-
-            ]),
-
     ]);
 }
 
