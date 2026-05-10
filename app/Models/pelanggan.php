@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class pelanggan extends Model
+class Pelanggan extends Model
 {
     use HasFactory;
-    protected $table = 'pelanggan';
 
+    protected $table = 'pelanggan';
+    protected $primaryKey = 'id_pelanggan';
     protected $guarded = [];
 
-protected $primaryKey = 'id_pelanggan';
+    public function penjualan()
+    {
+        return $this->hasMany(Penjualan::class, 'pelanggan_id', 'id_pelanggan');
+    }
 }
