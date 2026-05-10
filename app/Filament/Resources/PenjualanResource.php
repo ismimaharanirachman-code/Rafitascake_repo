@@ -253,6 +253,28 @@ class PenjualanResource extends Resource
                                                         ->required(),
 
                                     ]),
+            Forms\Components\Placeholder::make('harga_display')
+                ->label('Harga')
+                ->content(fn ($get) => 'Rp ' . number_format($get('harga') ?? 0, 0, ',', '.')),
+
+            Forms\Components\Hidden::make('subtotal'),
+
+            Forms\Components\Placeholder::make('subtotal_display')
+                ->label('Subtotal')
+                ->content(fn ($get) => 'Rp ' . number_format($get('subtotal') ?? 0, 0, ',', '.')),
+                                            ]),
+                                    ])
+                                    ->afterStateHydrated(function ($state, callable $set) {
+                                        $set('total_harga', collect($state ?? [])->sum('subtotal'));
+                                    })
+                                   ->afterStateUpdated(function ($state, callable $set) {
+                                        $total = collect($state ?? [])->sum('subtotal');
+                                        $set('total_harga', $total);
+                                    })
+                                    ->createItemButtonLabel('Tambah Produk')
+                                    ->required(),
+
+                ]),
     //Totall
         Forms\Components\Section::make('Total')
             ->schema([
