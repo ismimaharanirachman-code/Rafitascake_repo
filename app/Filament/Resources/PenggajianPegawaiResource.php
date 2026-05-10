@@ -17,6 +17,7 @@ class PenggajianPegawaiResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationLabel = 'Penggajian';
 
     public static function form(Form $form): Form
@@ -38,6 +39,11 @@ class PenggajianPegawaiResource extends Resource
                                     STR_PAD_LEFT
                                 )
                             )
+                Forms\Components\Section::make('Informasi Penggajian')
+                    ->schema([
+                        Forms\Components\TextInput::make('id_penggajian')
+                            ->label('ID Penggajian')
+                            ->default(fn () => 'GJI' . str_pad(PenggajianPegawai::count() + 1, 3, '0', STR_PAD_LEFT))
                             ->disabled()
                             ->dehydrated(),
 
@@ -48,6 +54,7 @@ class PenggajianPegawaiResource extends Resource
                                 fn (Pegawai $record) =>
                                 "{$record->id_pegawai} - {$record->nama_pegawai}"
                             )
+                            ->getOptionLabelFromRecordUsing(fn (Pegawai $record) => "{$record->id_pegawai} - {$record->nama_pegawai}")
                             ->searchable()
                             ->preload()
                             ->required()
@@ -67,6 +74,10 @@ class PenggajianPegawaiResource extends Resource
 
                                     $set('gaji_pokok', $gaji);
 
+                                $pegawai = Pegawai::find($state);
+                                if ($pegawai) {
+                                    $gaji = number_format($pegawai->gaji, 0, ',', '.');
+                                    $set('gaji_pokok', $gaji);
                                     $set('total_gaji', $gaji);
                                 }
                             }),
@@ -175,6 +186,58 @@ class PenggajianPegawaiResource extends Resource
                                 'Transfer' => 'Transfer',
                                 'Cash' => 'Cash',
                             ])
+                    ])->columns(2),
+
+               Forms\Components\Section::make('Detail Gaji')
+    ->schema([
+        Forms\Components\TextInput::make('gaji_pokok')
+            ->label('Gaji Pokok')
+            ->prefix('Rp')
+            ->required()
+            // FIX: Cek dulu kalau ada titik jangan diformat lagi, kalau angka polos baru format
+            ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : $state)
+            ->dehydrateStateUsing(fn ($state) => str_replace('.', '', $state))
+            ->live(onBlur: true)
+            ->afterStateUpdated(fn ($set, $get) => self::hitungTotal($set, $get)),
+
+        Forms\Components\TextInput::make('tunjangan')
+            ->label('Tunjangan')
+            ->prefix('Rp')
+            ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : $state)
+            ->dehydrateStateUsing(fn ($state) => str_replace('.', '', $state))
+            ->live(onBlur: true)
+            ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                $angka = (int) str_replace('.', '', $state);
+                $set('tunjangan', number_format($angka, 0, ',', '.'));
+                self::hitungTotal($set, $get);
+            }),
+
+        Forms\Components\TextInput::make('potongan')
+            ->label('Potongan')
+            ->prefix('Rp')
+            ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : $state)
+            ->dehydrateStateUsing(fn ($state) => str_replace('.', '', $state))
+            ->live(onBlur: true)
+            ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                $angka = (int) str_replace('.', '', $state);
+                $set('potongan', number_format($angka, 0, ',', '.'));
+                self::hitungTotal($set, $get);
+            }),
+
+        Forms\Components\TextInput::make('total_gaji')
+            ->label('Total Gaji Diterima')
+            ->prefix('Rp')
+            ->readonly()
+            ->formatStateUsing(fn ($state) => is_numeric($state) ? number_format($state, 0, ',', '.') : $state)
+            ->dehydrateStateUsing(fn ($state) => str_replace('.', '', $state))
+            ->required(),
+    ])->columns(2),
+
+                Forms\Components\Section::make('Status & Pembayaran')
+                    ->schema([
+                        Forms\Components\Select::make('metode_pembayaran')
+                            ->label('Metode Pembayaran')
+                            ->options(['Transfer' => 'Transfer', 'Cash' => 'Cash'])
                             ->required(),
 
                         Forms\Components\Select::make('status_pembayaran')
@@ -183,6 +246,7 @@ class PenggajianPegawaiResource extends Resource
                                 'Pending' => 'Pending',
                                 'Lunas' => 'Lunas',
                             ])
+                            ->options(['Pending' => 'Pending', 'Lunas' => 'Lunas'])
                             ->required(),
 
                         Forms\Components\Textarea::make('keterangan')
@@ -192,6 +256,7 @@ class PenggajianPegawaiResource extends Resource
                     ])
                     ->columns(2),
 
+                    ])->columns(2),
             ]);
     }
 
@@ -201,6 +266,7 @@ class PenggajianPegawaiResource extends Resource
 
         $tunjangan = (int) str_replace('.', '', $get('tunjangan') ?? 0);
 
+        $tunjangan = (int) str_replace('.', '', $get('tunjangan') ?? 0);
         $potongan = (int) str_replace('.', '', $get('potongan') ?? 0);
 
         $total = $gaji + $tunjangan - $potongan;
@@ -209,6 +275,7 @@ class PenggajianPegawaiResource extends Resource
             'total_gaji',
             number_format($total, 0, ',', '.')
         );
+        $set('total_gaji', number_format($total, 0, ',', '.'));
     }
 
     public static function table(Table $table): Table
@@ -260,6 +327,22 @@ class PenggajianPegawaiResource extends Resource
 
                 ]),
 
+                Tables\Columns\TextColumn::make('id_penggajian')->label('ID')->searchable(),
+                Tables\Columns\TextColumn::make('pegawai.nama_pegawai')->label('Karyawan')->searchable(),
+                Tables\Columns\TextColumn::make('tanggal_gaji')->label('Tanggal')->date(),
+                Tables\Columns\TextColumn::make('total_gaji')
+                    ->label('Total Gaji')
+                    ->money('IDR', locale: 'id'),
+                Tables\Columns\TextColumn::make('status_pembayaran')->badge(),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
