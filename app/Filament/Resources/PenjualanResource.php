@@ -157,125 +157,156 @@ class PenjualanResource extends Resource
         ->visible(fn ($get) => $get('pelanggan_mode') === 'custom'),
 
             // 🧁 DETAIL PRODUK
-            Forms\Components\Section::make('Detail Produk')
-                ->schema([
+Forms\Components\Section::make('Detail Produk')
+    ->schema([
 
-                    Forms\Components\Repeater::make('detail')
-                        ->relationship()
-                        ->live()
-                        ->schema([
+        Forms\Components\Repeater::make('detail')
+            ->relationship()
+            ->live()
+            ->schema([
 
-                           Forms\Components\Grid::make(4)
-                            ->schema([
+                Forms\Components\Grid::make(4)
+                    ->schema([
 
-                            Forms\Components\Select::make('produk_id')
-                                ->label('Produk')
-                                ->relationship('produk', 'nama_kue')
-                                ->searchable()
-                                ->required()
-                                ->reactive()
-                                ->afterStateUpdated(function ($state, callable $set) {
+                        Forms\Components\Select::make('produk_id')
+                            ->label('Produk')
+                            ->relationship('produk', 'nama_kue')
+                            ->searchable()
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $set) {
 
-                                    $produk = Produk::find($state);
+                                $produk = Produk::find($state);
 
-                                    if ($produk) {
-                                        $harga = (int) $produk->harga_jual;
+                                if ($produk) {
 
-                                        $set('harga', $harga);
-                                        $set('qty', 1);
-                                        $set('subtotal', $harga);
-                                    }
-                                }),
+                                    $harga = (int) $produk->harga_jual;
 
-                                Forms\Components\Placeholder::make('preview_gambar')
-                                    ->label('Gambar Produk')
-                                    ->content(function ($get) {
+                                    $set('harga', $harga);
+                                    $set('qty', 1);
+                                    $set('subtotal', $harga);
+                                }
+                            }),
 
-                                        $produk = Produk::find($get('produk_id'));
+                        Forms\Components\Placeholder::make('preview_gambar')
+                            ->label('Gambar Produk')
+                            ->content(function ($get) {
 
-                                        if (!$produk || !$produk->gambar) {
-                                            return 'Belum ada gambar';
-                                        }
+                                $produk = Produk::find($get('produk_id'));
 
-                                        return new \Illuminate\Support\HtmlString(
-                                            "<img src='/storage/{$produk->gambar}' 
-                                            style='width:120px; border-radius:10px;'>"
-                                        );
-                                    }),
+                                if (!$produk || !$produk->gambar) {
+                                    return 'Belum ada gambar';
+                                }
 
-                                Forms\Components\TextInput::make('qty')
-                                        ->numeric()
-                                        ->minValue(1)
-                                        ->default(1)
-                                        ->required()
-                                        ->reactive()
-                                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                return new \Illuminate\Support\HtmlString(
+                                    "<img src='/storage/{$produk->gambar}'
+                                    style='width:120px; border-radius:10px;'>"
+                                );
+                            }),
 
-                                            $produk = Produk::find($get('produk_id'));
+                        Forms\Components\TextInput::make('qty')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(1)
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, callable $set, callable $get) {
 
-                                            if ($produk && $state > $produk->stok) {
+                                $produk = Produk::find($get('produk_id'));
 
-                                                Notification::make()
-                                                    ->title('Stok tidak cukup')
-                                                    ->body("Sisa stok: {$produk->stok}")
-                                                    ->danger()
-                                                    ->send();
+                                if ($produk && $state > $produk->stok) {
 
-                                                $set('qty', $produk->stok);
+                                    Notification::make()
+                                        ->title('Stok tidak cukup')
+                                        ->body("Sisa stok: {$produk->stok}")
+                                        ->danger()
+                                        ->send();
 
-                                                return;
-                                            }
+                                    $set('qty', $produk->stok);
 
-                                            $set('subtotal', ($get('harga') ?? 0) * $state);
-                                        }),
+                                    return;
+                                }
 
-                                Forms\Components\Hidden::make('harga'),
+                                $set('subtotal', ($get('harga') ?? 0) * $state);
+                            }),
 
-                                Forms\Components\Placeholder::make('harga_display')
-                                    ->label('Harga')
-                                    ->content(fn ($get) => 'Rp ' . number_format($get('harga') ?? 0, 0, ',', '.')),
+                        Forms\Components\Hidden::make('harga'),
 
-                                Forms\Components\Hidden::make('subtotal'),
+                        Forms\Components\Placeholder::make('harga_display')
+                            ->label('Harga')
+                            ->content(fn ($get) =>
+                                'Rp ' . number_format($get('harga') ?? 0, 0, ',', '.')
+                            ),
 
-                                Forms\Components\Placeholder::make('subtotal_display')
-                                    ->label('Subtotal')
-                                    ->content(fn ($get) => 'Rp ' . number_format($get('subtotal') ?? 0, 0, ',', '.')),
-                                                                ]),
-                                                        ])
-                                                        ->afterStateHydrated(function ($state, callable $set) {
-                                                            $set('total_harga', collect($state ?? [])->sum('subtotal'));
-                                                        })
-                                                    ->afterStateUpdated(function ($state, callable $set) {
-                                                            $total = collect($state ?? [])->sum('subtotal');
-                                                            $set('total_harga', $total);
-                                                        })
-                                                        ->createItemButtonLabel('Tambah Produk')
-                                                        ->required(),
+                        Forms\Components\Hidden::make('subtotal'),
 
-                                    ]),
-            Forms\Components\Placeholder::make('harga_display')
-                ->label('Harga')
-                ->content(fn ($get) => 'Rp ' . number_format($get('harga') ?? 0, 0, ',', '.')),
+                        Forms\Components\Placeholder::make('subtotal_display')
+                            ->label('Subtotal')
+                            ->content(fn ($get) =>
+                                'Rp ' . number_format($get('subtotal') ?? 0, 0, ',', '.')
+                            ),
 
-            Forms\Components\Hidden::make('subtotal'),
+                    ]),
 
-            Forms\Components\Placeholder::make('subtotal_display')
-                ->label('Subtotal')
-                ->content(fn ($get) => 'Rp ' . number_format($get('subtotal') ?? 0, 0, ',', '.')),
-                                            ]),
-                                    ])
-                                    ->afterStateHydrated(function ($state, callable $set) {
-                                        $set('total_harga', collect($state ?? [])->sum('subtotal'));
-                                    })
-                                   ->afterStateUpdated(function ($state, callable $set) {
-                                        $total = collect($state ?? [])->sum('subtotal');
-                                        $set('total_harga', $total);
-                                    })
-                                    ->createItemButtonLabel('Tambah Produk')
-                                    ->required(),
+            ])
 
-                ]),
-    //Totall
+            ->afterStateHydrated(function ($state, callable $set) {
+
+                $set(
+                    'total_harga',
+                    collect($state ?? [])->sum('subtotal')
+                );
+            })
+
+            ->afterStateUpdated(function ($state, callable $set) {
+
+                $total = collect($state ?? [])->sum('subtotal');
+
+                $set('total_harga', $total);
+            })
+
+            ->createItemButtonLabel('Tambah Produk')
+            ->required(),
+
+]),
+
+// TOTAL
+Forms\Components\Section::make('Total')
+    ->schema([
+
+        Forms\Components\Hidden::make('total_harga')
+            ->dehydrated(true),
+
+        Forms\Components\Placeholder::make('total_display')
+            ->label('Total Harga')
+            ->content(function ($get) {
+
+                $total = number_format(
+                    $get('total_harga') ?? 0,
+                    0,
+                    ',',
+                    '.'
+                );
+
+                return new \Illuminate\Support\HtmlString("
+                    <div style='
+                        background:#fdf2f8;
+                        padding:16px;
+                        border-radius:12px;
+                        border:2px solid #ec4899;
+                        font-size:28px;
+                        font-weight:bold;
+                        color:#be185d;
+                        text-align:center;
+                    '>
+                        Rp {$total}
+                    </div>
+                ");
+            }),
+
+    ]),
+
+    //Totall Harga
         Forms\Components\Section::make('Total')
             ->schema([
 
