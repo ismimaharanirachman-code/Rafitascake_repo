@@ -24,14 +24,20 @@ class PegawaiResource extends Resource
 {
     protected static ?string $model = Pegawai::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     protected static ?string $navigationLabel = 'Pegawai';
+
+    protected static ?string $navigationGroup = 'Master Data';
+
+    protected static ?string $modelLabel = 'Pegawai';
+    protected static ?string $pluralModelLabel = 'Pegawai';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+
                 TextInput::make('nama_pegawai')
                     ->label('Nama Pegawai')
                     ->required()
@@ -53,6 +59,21 @@ class PegawaiResource extends Resource
                     ->required()
                     ->minLength(10)
                     ->maxLength(15),
+
+                TextInput::make('gaji')
+                    ->label('Gaji')
+                    ->prefix('Rp')
+                    ->required()
+                    ->formatStateUsing(
+                        fn ($state) =>
+                        number_format((float) $state, 0, ',', '.')
+                    )
+                    ->dehydrateStateUsing(
+                        fn ($state) =>
+                        str_replace('.', '', $state)
+                    )
+                    ->placeholder('Contoh: 3.000.000'),
+
             ]);
     }
 
@@ -60,9 +81,13 @@ class PegawaiResource extends Resource
     {
         return $table
             ->columns([
+
                 TextColumn::make('id_pegawai')
                     ->label('Kode Pegawai')
-                    ->formatStateUsing(fn ($state) => 'PG' . str_pad($state, 3, '0', STR_PAD_LEFT))
+                    ->formatStateUsing(
+                        fn ($state) =>
+                        'PG' . str_pad($state, 3, '0', STR_PAD_LEFT)
+                    )
                     ->sortable(),
 
                 TextColumn::make('nama_pegawai')
@@ -78,6 +103,15 @@ class PegawaiResource extends Resource
 
                 TextColumn::make('no_hp')
                     ->label('No HP'),
+
+                TextColumn::make('gaji')
+                    ->label('Gaji')
+                    ->formatStateUsing(
+                        fn ($state) =>
+                        'Rp ' . number_format($state, 0, ',', '.')
+                    )
+                    ->sortable(),
+
             ])
             ->filters([])
             ->actions([

@@ -25,5 +25,6 @@ class Pegawai extends Model
         'jabatan',
         'alamat_pegawai',
         'no_hp',
+        'gaji',
     ];
 }
