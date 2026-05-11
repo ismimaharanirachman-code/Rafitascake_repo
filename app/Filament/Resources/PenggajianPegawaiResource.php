@@ -11,6 +11,11 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
+// tambahan untuk tombol unduh pdf
+use Filament\Tables\Actions\Action; //untuk dapat menggunakan action
+use Barryvdh\DomPDF\Facade\Pdf; // Kalau kamu pakai DomPDF
+use Illuminate\Support\Facades\Storage;
+
 class PenggajianPegawaiResource extends Resource
 {
     protected static ?string $model = PenggajianPegawai::class;
@@ -140,6 +145,25 @@ class PenggajianPegawaiResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+            ])
+            // tombol tambahan
+            ->headerActions([
+                // tombol tambahan export pdf
+                // ✅ Tombol Unduh PDF
+                Action::make('downloadPdf')
+                ->label('Unduh PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->action(function () {
+                    $PenggajianPegawai = PenggajianPegawai::all();
+
+                    $pdf = Pdf::loadView('pdf.PenggajianPegawai', ['PenggajianPegawai' => $PenggajianPegawai]);
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'PenggajianPegawai-list.pdf'
+                    );
+                })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
