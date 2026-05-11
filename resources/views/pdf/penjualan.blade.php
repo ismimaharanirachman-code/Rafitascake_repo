@@ -56,13 +56,37 @@
 
                     <td>{{ $item->no_nota }}</td>
 
-                    <td>{{ $item->tanggal }}</td>
-
                     <td>
-                        {{ $item->pelanggan->nama_pelanggan ?? 'Umum' }}
-                    </td>
 
-                    <td>{{ $item->metode_pembayaran }}</td>
+    {{
+        \Carbon\Carbon::parse($item->tanggal)->day
+    }}
+
+    {{
+        [
+            1 => 'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        ][\Carbon\Carbon::parse($item->tanggal)->month]
+    }}
+
+    {{
+        \Carbon\Carbon::parse($item->tanggal)->year
+    }}
+
+</td>
+                    <td>{{ $item->pelanggan->nama_pelanggan ?? 'Umum' }}</td>
+
+                    <td>{{ $item->metode_pembayaran == 'cash' ? 'Tunai' : 'QRIS' }}</td>
 
                     <td>{{ $item->status }}</td>
 
