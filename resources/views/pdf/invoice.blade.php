@@ -58,9 +58,33 @@
     </p>
 
     <p>
-        <strong>Tanggal:</strong>
-        {{ $penjualan->tanggal }}
-    </p>
+    <strong>Tanggal:</strong>
+
+    {{
+        \Carbon\Carbon::parse($penjualan->tanggal)->day
+    }}
+
+    {{
+        [
+            1 => 'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        ][\Carbon\Carbon::parse($penjualan->tanggal)->month]
+    }}
+
+    {{
+        \Carbon\Carbon::parse($penjualan->tanggal)->year
+    }}
+</p>
 
     <p>
         <strong>Pelanggan:</strong>
@@ -69,7 +93,7 @@
 
     <p>
         <strong>Metode Pembayaran:</strong>
-        {{ $penjualan->metode_pembayaran }}
+        {{ $penjualan->metode_pembayaran == 'cash' ? 'Tunai' : 'QRIS' }}
     </p>
 
     <p>

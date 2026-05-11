@@ -113,9 +113,9 @@ class PenjualanResource extends Resource
                                 ->default(now())
                                 ->required(),
 
-                            Forms\Components\Select::make('metode_pembayaran')
+                           Forms\Components\Select::make('metode_pembayaran')
                                 ->options([
-                                    'cash' => 'Cash',
+                                    'cash' => 'Tunai',
                                     'qris' => 'QRIS',
                                 ])
                                 ->required(),
@@ -340,10 +340,13 @@ public static function table(Table $table): Table
             Tables\Columns\TextColumn::make('no_nota')
                 ->label('No Nota'),
             Tables\Columns\TextColumn::make('tanggal')
-                ->date('d M Y'),
+                ->formatStateUsing(
+                    fn ($state) => \Carbon\Carbon::parse($state)->translatedFormat('d F Y')),
             Tables\Columns\TextColumn::make('pelanggan.nama_pelanggan')
                 ->label('Pelanggan'),
-            Tables\Columns\TextColumn::make('metode_pembayaran'),
+            Tables\Columns\TextColumn::make('metode_pembayaran')
+                ->formatStateUsing(fn ($state) =>
+                    $state == 'cash' ? 'Tunai' : 'QRIS'),
             Tables\Columns\TextColumn::make('status'),
             Tables\Columns\TextColumn::make('total_harga')
                 ->label('Total Harga')
