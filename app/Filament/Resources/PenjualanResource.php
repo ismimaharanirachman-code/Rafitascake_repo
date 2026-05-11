@@ -16,9 +16,10 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class PenjualanResource extends Resource
 {
     protected static ?string $model = Penjualan::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationLabel = 'Penjualan';
+    protected static ?string $modelLabel = 'Penjualan';
+    protected static ?string $pluralModelLabel = 'Penjualan';
     public static function form(Form $form): Form
     {
         return $form->schema([
@@ -340,14 +341,43 @@ public static function table(Table $table): Table
             Tables\Columns\TextColumn::make('no_nota')
                 ->label('No Nota'),
             Tables\Columns\TextColumn::make('tanggal')
-                ->formatStateUsing(
-                    fn ($state) => \Carbon\Carbon::parse($state)->translatedFormat('d F Y')),
+        ->formatStateUsing(function ($state) {
+
+        $tanggal = \Carbon\Carbon::parse($state);
+
+        $bulan = [
+            1 => 'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember'
+        ];
+
+        return $tanggal->day . ' ' .
+               $bulan[$tanggal->month] . ' ' .
+               $tanggal->year;
+    }),
             Tables\Columns\TextColumn::make('pelanggan.nama_pelanggan')
                 ->label('Pelanggan'),
             Tables\Columns\TextColumn::make('metode_pembayaran')
                 ->formatStateUsing(fn ($state) =>
                     $state == 'cash' ? 'Tunai' : 'QRIS'),
-            Tables\Columns\TextColumn::make('status'),
+            Tables\Columns\BadgeColumn::make('status')
+                ->colors([
+                    'success' => 'selesai',
+                    'info' => 'diproses',
+                ])
+                ->icons([
+                    'heroicon-m-check-circle' => 'selesai',
+                    'heroicon-m-clock' => 'diproses',
+                ]),
             Tables\Columns\TextColumn::make('total_harga')
                 ->label('Total Harga')
                 ->formatStateUsing(
