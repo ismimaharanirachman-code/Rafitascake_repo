@@ -1,5 +1,5 @@
 <h1>Data Bahan Baku</h1>
-//
+
 <a href="{{ route('bahan-baku.create') }}">Tambah</a>
 
 <table border="1">
@@ -8,6 +8,8 @@
         <th>Stok</th>
         <th>Satuan</th>
         <th>Harga</th>
+        <th>Expired Date</th>
+        <th>Lokasi</th>
         <th>Aksi</th>
     </tr>
 
@@ -17,8 +19,18 @@
         <td>{{ $d->stok }}</td>
         <td>{{ $d->satuan }}</td>
         <td>{{ $d->harga }}</td>
+
+        <td>
+            {{ $d->expired_date ? $d->expired_date->format('d-m-Y') : '-' }}
+        </td>
+
+        <td>
+            {{ $d->storage_location ?? '-' }}
+        </td>
+
         <td>
             <a href="{{ route('bahan-baku.edit', $d->id) }}">Edit</a>
+
             <form action="{{ route('bahan-baku.destroy', $d->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
