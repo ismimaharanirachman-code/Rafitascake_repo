@@ -27,14 +27,21 @@ class ProdukResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cake'; // Icon kue
 
+<<<<<<< Updated upstream
     protected static ?string $navigationLabel = 'Produk';
     
+=======
+>>>>>>> Stashed changes
     protected static ?string $navigationGroup = 'Master Data';
 
      //Tambahkan ini untuk menghilangkan s
     protected static ?string $modelLabel = 'Produk';
     protected static ?string $pluralModelLabel = 'Produk';
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     public static function form(Form $form): Form
     {
         return $form

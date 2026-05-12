@@ -11,18 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bahan_bakus', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_bahan');
-            $table->integer('stok');
-            $table->string('satuan'); // contoh: kg, gram, pcs
-            $table->integer('harga');
-
-            // tambahan baru
+        Schema::table('bahan_bakus', function (Blueprint $table) {
             $table->date('expired_date')->nullable();
             $table->string('storage_location')->nullable();
-
-            $table->timestamps();
         });
     }
 
@@ -31,6 +22,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bahan_bakus');
+        Schema::table('bahan_bakus', function (Blueprint $table) {
+            $table->dropColumn([
+                'expired_date',
+                'storage_location'
+            ]);
+        });
     }
 };
