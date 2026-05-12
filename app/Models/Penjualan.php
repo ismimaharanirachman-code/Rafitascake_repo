@@ -32,14 +32,16 @@ class Penjualan extends Model
     });
 
     }
-
     public function pelanggan()
     {
         return $this->belongsTo(Pelanggan::class, 'pelanggan_id', 'id_pelanggan');
     }
-
     public function detail()
     {
         return $this->hasMany(PenjualanProduk::class, 'penjualan_id');
+    }
+    public function pengirimanEmail()
+    {
+        return $this->hasMany(PengirimanEmail::class);
     }
 }
