@@ -27,6 +27,14 @@ class ProdukResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cake'; // Icon kue
 
+    protected static ?string $navigationLabel = 'Produk';
+    
+    protected static ?string $navigationGroup = 'Master Data';
+
+     //Tambahkan ini untuk menghilangkan s
+    protected static ?string $modelLabel = 'Produk';
+    protected static ?string $pluralModelLabel = 'Produk';
+
     public static function form(Form $form): Form
     {
         return $form

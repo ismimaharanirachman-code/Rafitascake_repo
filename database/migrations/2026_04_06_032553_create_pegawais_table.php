@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('jabatan',50);
             $table->string('alamat_pegawai',100);
             $table->string('no_hp',50);
+            $table->decimal('gaji', 15, 2)->default(0); // Gaji
             $table->timestamps();
         });
     }

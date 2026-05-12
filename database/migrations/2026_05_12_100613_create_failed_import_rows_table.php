@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('produk', function (Blueprint $table) {
+        Schema::create('failed_import_rows', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kue');
-            $table->string('jenis_kue');
-            $table->string('harga_jual');
-            $table->string('stok');
-            $table->string('tanggal_produksi');
-            $table->string('gambar');
+            $table->json('data');
+            $table->foreignId('import_id')->constrained()->cascadeOnDelete();
+            $table->text('validation_error')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('produk');
+        Schema::dropIfExists('failed_import_rows');
     }
 };

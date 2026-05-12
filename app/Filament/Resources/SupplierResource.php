@@ -21,7 +21,14 @@ class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-truck';
+
+    protected static ?string $navigationGroup = 'Master Data';
+
+    protected static ?string $navigationLabel = 'Supplier';
+
+    protected static ?string $modelLabel = 'Supplier';
+    protected static ?string $pluralModelLabel = 'Supplier';
 
     public static function form(Form $form): Form
     {
@@ -73,7 +80,7 @@ class SupplierResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuppliers::route('/'),
+            'index' => Pages\ListSupplier::route('/'),
             'create' => Pages\CreateSupplier::route('/create'),
           
         ];

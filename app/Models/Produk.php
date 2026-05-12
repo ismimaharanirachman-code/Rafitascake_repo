@@ -11,4 +11,8 @@ class Produk extends Model
 
     protected $guarded = [];
     public $timestamps = false;
+    public function detail()
+{
+    return $this->hasMany(PenjualanProduk::class, 'produk_id');
+}
 }
