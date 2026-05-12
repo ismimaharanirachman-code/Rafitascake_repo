@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('bahan_baku_id')
                   ->constrained('bahan_bakus');
             $table->integer('qty');
-            $table->bigint('harga');
-            $table->bigint('subtotal');
+            $table->bigInteger('harga');
+            $table->bigInteger('subtotal');
             $table->timestamps();
         });
     }

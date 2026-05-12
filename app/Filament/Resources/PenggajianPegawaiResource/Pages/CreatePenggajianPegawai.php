@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreatePenggajianPegawai extends CreateRecord
 {
     protected static string $resource = PenggajianPegawaiResource::class;
+    protected function getRedirectUrl(): string
+{
+    return $this->getResource()::getUrl('index');
+}
 }
