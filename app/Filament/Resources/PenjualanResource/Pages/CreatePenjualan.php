@@ -6,6 +6,8 @@ use App\Filament\Resources\PenjualanResource;
 use App\Models\Produk;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Notifications\Notification;
+use Midtrans\Config;
+use Midtrans\Snap;
 
 class CreatePenjualan extends CreateRecord
 {
@@ -67,7 +69,7 @@ class CreatePenjualan extends CreateRecord
         }
     }
 
-    // 🔥 KURANGI STOK SETELAH TRANSAKSI BERHASIL
+    // 🔥 KURANGI STOK + MIDTRANS
     protected function afterCreate(): void
     {
         $penjualan = $this->record;
@@ -80,5 +82,34 @@ class CreatePenjualan extends CreateRecord
                 $produk->decrement('stok', (int) $item->qty);
             }
         }
+
+        // 🔥 QRIS MIDTRANS
+        if ($penjualan->metode_pembayaran == 'qris') {
+
+            Config::$serverKey = config('services.midtrans.server_key');
+            Config::$isProduction = false;
+            Config::$isSanitized = true;
+            Config::$is3ds = true;
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => 'ORDER-' . $penjualan->id,
+                    'gross_amount' => $penjualan->total_harga,
+                ],
+            ];
+
+            $snapToken = Snap::getSnapToken($params);
+
+            session()->put('snapToken', $snapToken);
+        }
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        if ($this->record->metode_pembayaran == 'qris') {
+            return '/midtrans-payment';
+        }
+
+        return $this->getResource()::getUrl('index');
     }
 }
