@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pembelian_bahan_baku', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('penjualan', function (Blueprint $table) {
+            $table->string('pelanggan_mode')->default('umum');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pembelian_bahan_baku');
+        Schema::table('penjualan', function (Blueprint $table) {
+            $table->dropColumn('pelanggan_mode');
+        });
     }
 };

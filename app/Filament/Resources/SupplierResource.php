@@ -27,7 +27,6 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationLabel = 'Supplier';
 
-    //Tambahkan ini untuk menghilangkan s
     protected static ?string $modelLabel = 'Supplier';
     protected static ?string $pluralModelLabel = 'Supplier';
 
