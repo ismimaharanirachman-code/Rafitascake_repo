@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Filament\Exports\PenjualanProdukExporter;
+use Filament\Tables\Actions\ExportAction;
 
 class PenjualanResource extends Resource
 {
@@ -418,7 +420,49 @@ class PenjualanResource extends Resource
                     ]),
 
             ])
+            ->headerActions([
+
+   Tables\Actions\Action::make('pdf')
+    ->label('Unduh PDF')
+    ->icon('heroicon-o-document-arrow-down')
+    ->color('danger')
+    ->url('/penjualan/pdf')
+    ->openUrlInNewTab(),
+
+    ExportAction::make()
+        ->exporter(PenjualanProdukExporter::class),
+
+])
             ->actions([
+                Tables\Actions\Action::make('bayarQris')
+    ->label('Bayar QRIS')
+    ->icon('heroicon-o-qr-code')
+    ->color('success')
+
+    ->visible(fn ($record) => $record->metode_pembayaran === 'qris')
+
+    ->url(function ($record) {
+
+        \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => 'ORDER-' . $record->id,
+                'gross_amount' => $record->total_harga,
+            ],
+        ];
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        session()->put('snapToken', $snapToken);
+
+        return url('/midtrans-payment');
+    })
+
+    ->openUrlInNewTab(),
                 Tables\Actions\Action::make('selesai')
                     ->label('Selesaikan')
                     ->color('success')
@@ -443,7 +487,12 @@ class PenjualanResource extends Resource
                 
                 Tables\Actions\EditAction::make(),
 
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('invoice')
+                ->label('Invoice')
+                ->icon('heroicon-o-document-text')
+                ->color('success')
+                ->url(fn ($record) => url('/invoice/' . $record->id))
+                ->openUrlInNewTab(),
 
                 Tables\Actions\Action::make('kirimEmail')
                     ->label('Kirim Email')
