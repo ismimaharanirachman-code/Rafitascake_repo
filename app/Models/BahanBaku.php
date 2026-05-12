@@ -9,10 +9,8 @@ class BahanBaku extends Model
 {
     use HasFactory;
 
-
     protected $table = 'bahan_bakus';
 
-   
     protected $fillable = [
         'nama_bahan',
         'stok',
@@ -20,9 +18,9 @@ class BahanBaku extends Model
         'harga',
     ];
 
-   
     protected $casts = [
         'stok' => 'integer',
         'harga' => 'integer',
     ];
+
 }
