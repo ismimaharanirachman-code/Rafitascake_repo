@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PembelianBahanBakuResource\Pages;
 use App\Models\PembelianBahanBaku;
-
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -12,17 +11,18 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Placeholder;
-
 use Filament\Resources\Resource;
-
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Tables\Actions\Action;
+use Filament\Support\Colors\Color;
 
 class PembelianBahanBakuResource extends Resource
 {
     protected static ?string $model = PembelianBahanBaku::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationLabel = 'Pembelian Bahan Baku';
     protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $pluralModelLabel = 'Pembelian Bahan Baku';
@@ -224,6 +224,22 @@ class PembelianBahanBakuResource extends Resource
                     }),
             ])
             ->striped()
+            ->headerActions([
+            Action::make('downloadPdf')
+                ->label('PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color(Color::Pink) 
+                ->action(function () {
+                    $data = \App\Models\PembelianBahanBaku::all();
+                    $pdf = Pdf::loadView('pdf.pembelian', [
+                        'pembelian' => $data,
+                    ]);
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'Pembelian Bahan Baku.pdf'
+                    );
+                }),
+        ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status_pembayaran')
                 ->options([
@@ -240,10 +256,22 @@ class PembelianBahanBakuResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),]),
+                Tables\Actions\DeleteBulkAction::make(),]),
+                Tables\Actions\BulkAction::make('downloadBulkInvoice')
+                    ->label('Cetak Invoice')
+                    ->icon('heroicon-o-printer')
+                    ->color(Color::Pink) 
+                    ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
+                        $pdf = Pdf::loadView('pdf.invoice_pembelian', [
+                        'records' => $records,]);
+                            return response()->streamDownload( fn () => print($pdf->output()),'bulk-invoice-pembelian.pdf');
+                            }),
             ]);
+            
+
     }
     public static function getRelations(): array
     {
