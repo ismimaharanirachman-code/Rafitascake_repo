@@ -34,3 +34,6 @@ Route::resource('coa', CoaController::class);
 
 use App\Http\Controllers\ProdukController;
 Route::resource('Produk', ProdukController::class);
+
+use App\Http\Controllers\PengirimanEmailController;
+Route::get('/kirim-email/{id}',[PengirimanEmailController::class, 'prosesKirimEmail']);
