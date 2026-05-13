@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama_kue');
             $table->string('jenis_kue');
-            $table->string('harga_jual');
-            $table->string('stok');
-            $table->string('tanggal_produksi');
+            $table->integer('harga_jual');
+            $table->integer('stok');
+            $table->date('tanggal_produksi')->nullable();
             $table->string('gambar');
             $table->timestamps();
         });
