@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Filament\Exports\PenjualanProdukExporter;
+use Filament\Tables\Actions\ExportAction;
 
 class PenjualanResource extends Resource
 {
@@ -418,6 +420,19 @@ class PenjualanResource extends Resource
                     ]),
 
             ])
+            ->headerActions([
+
+   Tables\Actions\Action::make('pdf')
+    ->label('Unduh PDF')
+    ->icon('heroicon-o-document-arrow-down')
+    ->color('danger')
+    ->url('/penjualan/pdf')
+    ->openUrlInNewTab(),
+
+    ExportAction::make()
+        ->exporter(PenjualanProdukExporter::class),
+
+])
             ->actions([
                 Tables\Actions\Action::make('bayarQris')
     ->label('Bayar QRIS')
@@ -472,7 +487,12 @@ class PenjualanResource extends Resource
                 
                 Tables\Actions\EditAction::make(),
 
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\Action::make('invoice')
+                ->label('Invoice')
+                ->icon('heroicon-o-document-text')
+                ->color('success')
+                ->url(fn ($record) => url('/invoice/' . $record->id))
+                ->openUrlInNewTab(),
 
                 Tables\Actions\Action::make('kirimEmail')
                     ->label('Kirim Email')

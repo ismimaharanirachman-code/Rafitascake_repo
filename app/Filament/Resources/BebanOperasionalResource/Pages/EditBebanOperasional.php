@@ -16,4 +16,11 @@ class EditBebanOperasional extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+<<<<<<< HEAD
+=======
+    protected function getRedirectUrl(): string
+{
+    return $this->getResource()::getUrl('index');
+}
+>>>>>>> 9caf477f02c014ae1bba8cd5471985347852ea7f
 }

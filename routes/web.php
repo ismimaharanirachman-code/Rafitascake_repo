@@ -37,3 +37,21 @@ Route::resource('Produk', ProdukController::class);
 
 use App\Http\Controllers\PengirimanEmailController;
 Route::get('/kirim-email/{id}',[PengirimanEmailController::class, 'prosesKirimEmail']);
+
+use App\Models\Penjualan;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+Route::get('/penjualan/pdf', function () {
+    $penjualan = Penjualan::all();
+    $pdf = Pdf::loadView('pdf.penjualan', compact('penjualan'));
+    return $pdf->download('daftar-penjualan.pdf');
+
+});
+use App\Http\Controllers\MidtransController;
+Route::get('/midtrans', [MidtransController::class, 'index']);
+
+Route::get('/midtrans-payment', function () {
+    return view('midtrans.index', [
+        'snapToken' => session('snapToken')
+    ]);
+});

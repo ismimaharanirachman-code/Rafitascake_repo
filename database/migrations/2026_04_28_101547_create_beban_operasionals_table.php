@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('beban_operasionals', function (Blueprint $table) {
-            Schema::create('beban_operasionals', function (Blueprint $table) {
                     $table->id();
                     $table->date('tanggal')->nullable();
                     $table->string('kode_akun')->nullable();
@@ -21,17 +20,17 @@ return new class extends Migration
                     $table->string('lampiran')->nullable();
                     $table->string('coa_id')->nullable();
                     $table->timestamps();
-});
-        });
-    }
+                });
+        }
 
     /**
      * Reverse the migrations.
      */
+
     public function down(): void
     {
-        Schema::table('beban_operasionals', function (Blueprint $table) {
-
-        });
+      
+        Schema::dropIfExists('beban_operasionals');
     }
 };
+

@@ -20,6 +20,14 @@ class BahanBaku extends Model
         'storage_location',
     ];
 
+<<<<<<< Updated upstream
+=======
+    public function produksiDetails()
+    {
+    return $this->hasMany(ProduksiDetail::class);
+    }
+
+>>>>>>> Stashed changes
     protected $casts = [
         'stok' => 'integer',
         'harga' => 'integer',
