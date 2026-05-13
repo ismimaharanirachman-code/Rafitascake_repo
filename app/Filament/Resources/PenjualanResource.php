@@ -419,6 +419,35 @@ class PenjualanResource extends Resource
 
             ])
             ->actions([
+                Tables\Actions\Action::make('bayarQris')
+    ->label('Bayar QRIS')
+    ->icon('heroicon-o-qr-code')
+    ->color('success')
+
+    ->visible(fn ($record) => $record->metode_pembayaran === 'qris')
+
+    ->url(function ($record) {
+
+        \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => 'ORDER-' . $record->id . '-' . time(),
+                'gross_amount' => $record->total_harga,
+            ],
+        ];
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        session()->put('snapToken', $snapToken);
+
+        return url('/midtrans-payment');
+    })
+
+    ->openUrlInNewTab(),
                 Tables\Actions\Action::make('selesai')
                     ->label('Selesaikan')
                     ->color('success')
