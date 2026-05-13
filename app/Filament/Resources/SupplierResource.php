@@ -27,7 +27,10 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationLabel = 'Supplier';
 
+<<<<<<< Updated upstream
+=======
     //Tambahkan ini untuk menghilangkan s
+>>>>>>> Stashed changes
     protected static ?string $modelLabel = 'Supplier';
     protected static ?string $pluralModelLabel = 'Supplier';
 
@@ -81,7 +84,7 @@ class SupplierResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuppliers::route('/'),
+            'index' => Pages\ListSupplier::route('/'),
             'create' => Pages\CreateSupplier::route('/create'),
           
         ];
