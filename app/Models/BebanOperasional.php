@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class BebanOperasional extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+    'tanggal',
+    'coa_id',
+    'nominal',
+    'lampiran',
+    'keterangan',
+];
 }
