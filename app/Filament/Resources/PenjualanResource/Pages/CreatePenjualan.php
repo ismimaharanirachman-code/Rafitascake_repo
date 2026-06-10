@@ -69,15 +69,13 @@ class CreatePenjualan extends CreateRecord
         }
     }
 
-    // 🔥 KURANGI STOK + MIDTRANS
+// 🔥 KURANGI STOK + MIDTRANS
     protected function afterCreate(): void
     {
         $penjualan = $this->record;
 
         foreach ($penjualan->detail as $item) {
-
             $produk = Produk::find($item->produk_id);
-
             if ($produk) {
                 $produk->decrement('stok', (int) $item->qty);
             }
@@ -93,8 +91,9 @@ class CreatePenjualan extends CreateRecord
 
             $params = [
                 'transaction_details' => [
-                    'order_id' => 'ORDER-' . $penjualan->id,
-                    'gross_amount' => $penjualan->total_harga,
+                    // Tambahkan timestamp (now()->timestamp) agar ID unik setiap kali request
+                    'order_id' => 'ORDER-' . $penjualan->id . '-' . now()->timestamp,
+                    'gross_amount' => (int) $penjualan->total_harga,
                 ],
             ];
 
@@ -103,7 +102,6 @@ class CreatePenjualan extends CreateRecord
             session()->put('snapToken', $snapToken);
         }
     }
-
     protected function getRedirectUrl(): string
     {
         if ($this->record->metode_pembayaran == 'qris') {

@@ -12,12 +12,16 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Placeholder;
-
 use Filament\Resources\Resource;
-
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+use Filament\Notifications\Notification;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class PembelianBahanBakuResource extends Resource
 {
@@ -224,6 +228,21 @@ class PembelianBahanBakuResource extends Resource
                     }),
             ])
             ->striped()
+             ->headerActions([
+            Tables\Actions\Action::make('downloadPdf')
+                ->label('Unduh PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->color('success')
+                ->action(function () {
+                    $pembelian = \App\Models\PembelianBahanBaku::all();
+                    $pdf = Pdf::loadView('pdf.pembelian', ['pembelian' => $pembelian]);
+
+                    return response()->streamDownload(
+                        fn () => print($pdf->output()),
+                        'Pembelian Bahan Baku.pdf'
+                    );
+                }),
+        ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status_pembayaran')
                 ->options([
@@ -242,8 +261,24 @@ class PembelianBahanBakuResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),]),
-            ]);
+                Tables\Actions\DeleteBulkAction::make(),]),
+                Tables\Actions\BulkAction::make('kirimEmailMassal')
+                        ->label('Kirim Email Invoice')
+                        ->icon('heroicon-o-envelope')
+                        ->color('rose')
+                        ->requiresConfirmation()
+                        ->action(function (\Illuminate\Support\Collection $records) {
+                            foreach ($records as $record) {
+                                \App\Http\Controllers\PengirimanEmailController::prosesKirimEmail($record->id);
+                            }
+
+                            \Filament\Notifications\Notification::make()
+                                ->title('Email berhasil dikirim')
+                                ->success()
+                                ->send();
+                        }),
+                ]); 
+            
     }
     public static function getRelations(): array
     {

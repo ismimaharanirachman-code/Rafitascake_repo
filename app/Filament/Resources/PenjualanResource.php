@@ -26,6 +26,7 @@ class PenjualanResource extends Resource
     protected static ?string $modelLabel = 'Penjualan';
 
     protected static ?string $pluralModelLabel = 'Penjualan';
+     protected static ?string $navigationGroup = 'Transaksi';
 
     public static function form(Form $form): Form
     {
