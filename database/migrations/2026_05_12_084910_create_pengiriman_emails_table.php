@@ -16,7 +16,7 @@ return new class extends Migration
 
             // relasi ke tabel penjualan
             $table->foreignId('penjualan_id')
-                  ->constrained('penjualans')
+                  ->constrained('penjualan')
                   ->onDelete('cascade');
 
             // status email

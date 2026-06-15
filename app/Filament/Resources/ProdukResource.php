@@ -29,7 +29,6 @@ class ProdukResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-cake';
 
     protected static ?string $navigationLabel = 'Produk';
-
     protected static ?string $navigationGroup = 'Master Data';
 
     protected static ?string $modelLabel = 'Produk';
@@ -91,7 +90,8 @@ class ProdukResource extends Resource
 
                 TextColumn::make('harga_jual')
                     ->label('Harga')
-                    ->money('IDR')
+                    ->money('IDR
+                    ')
                     ->sortable(),
 
                 TextColumn::make('stok')
