@@ -20,6 +20,7 @@ class PenggajianPegawaiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationLabel = 'Penggajian';
     protected static ?string $navigationGroup = 'Transaksi';
+    
 
     public static function form(Form $form): Form
     {
@@ -216,7 +217,6 @@ class PenggajianPegawaiResource extends Resource
                     ->action(function () {
                         $data = PenggajianPegawai::all();
                         $pdf = Pdf::loadView('pdf.PenggajianPegawai', ['PenggajianPegawai' => $data]);
-                        $pdf->setpaper('a4','potrait');
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
                             'Laporan-Seluruh-Penggajian.pdf'

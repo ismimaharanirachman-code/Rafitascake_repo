@@ -16,11 +16,14 @@ class BahanBaku extends Model
         'stok',
         'satuan',
         'harga',
+        'expired_date',
+        'storage_location',
     ];
 
     protected $casts = [
         'stok' => 'integer',
         'harga' => 'integer',
+        'expired_date' => 'date',
     ];
 
 }
