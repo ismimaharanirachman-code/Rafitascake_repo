@@ -10,8 +10,9 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Tables\Actions\Action; // Pastikan ini ada
-use Barryvdh\DomPDF\Facade\Pdf;      // Pastikan ini ada
+use Filament\Tables\Actions\Action; 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail; // Tambahan untuk Mailtrap
 
 class PenggajianPegawaiResource extends Resource
 {
@@ -19,6 +20,7 @@ class PenggajianPegawaiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationLabel = 'Penggajian';
     protected static ?string $navigationGroup = 'Transaksi';
+    
 
     public static function form(Form $form): Form
     {
@@ -145,9 +147,7 @@ class PenggajianPegawaiResource extends Resource
         $gaji = (int) str_replace('.', '', $get('gaji_pokok') ?? 0);
         $tunjangan = (int) str_replace('.', '', $get('tunjangan') ?? 0);
         $potongan = (int) str_replace('.', '', $get('potongan') ?? 0);
-
         $total = $gaji + $tunjangan - $potongan;
-
         $set('total_gaji', number_format($total, 0, ',', '.'));
     }
 
@@ -193,53 +193,42 @@ class PenggajianPegawaiResource extends Resource
                         'Lunas' => 'Lunas',
                     ]),
             ])
-                
-              ->actions([
-                Tables\Actions\ViewAction::make()
-                    ->label('Lihat')
-                    ->color('info'),
+            ->actions([
+                Tables\Actions\ViewAction::make()->label('Lihat')->color('info'),
                 Tables\Actions\EditAction::make(),
                 
-                // 1. Tombol Invoice Per Baris (Untuk Slip Gaji Satuan)
                 Action::make('downloadInvoice')
                     ->label('Invoice')
                     ->icon('heroicon-o-document-text')
                     ->color('success')
                     ->action(function (PenggajianPegawai $record) {
                         $pdf = Pdf::loadView('pdf.invoice_gaji', ['record' => $record]);
-                        
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
                             'Invoice-' . ($record->id_penggajian ?? $record->id) . '.pdf'
                         );
                     }),
-
             ])
             ->headerActions([
-                // 2. Tombol Unduh Laporan (Untuk Semua Data Penggajian)
                 Action::make('downloadPdf')
                     ->label('Unduh Laporan PDF')
                     ->icon('heroicon-o-printer')
                     ->color('warning')
                     ->action(function () {
                         $data = PenggajianPegawai::all();
-                        
-                        // Pastikan kamu punya file resources/views/pdf/PenggajianPegawai.blade.php
                         $pdf = Pdf::loadView('pdf.PenggajianPegawai', ['PenggajianPegawai' => $data]);
-
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
                             'Laporan-Seluruh-Penggajian.pdf'
                         );
-                }),
-
+                    }),
             ])
             ->bulkActions([
-            Tables\Actions\DeleteBulkAction::make()
-            ->label('Hapus')
-            ->icon('heroicon-o-trash')
-            ->color('danger')
-            ->requiresConfirmation(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->label('Hapus')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation(),
             ]);
     }
 
