@@ -15,9 +15,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Actions\BulkAction;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+use Filament\Notifications\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Filament\Tables\Actions\Action;
-use Filament\Support\Colors\Color;
+use Illuminate\Support\Facades\Storage;
 
 class PembelianBahanBakuResource extends Resource
 {
@@ -224,16 +227,15 @@ class PembelianBahanBakuResource extends Resource
                     }),
             ])
             ->striped()
-            ->headerActions([
-            Action::make('downloadPdf')
-                ->label('PDF')
+             ->headerActions([
+            Tables\Actions\Action::make('downloadPdf')
+                ->label('Unduh PDF')
                 ->icon('heroicon-o-document-arrow-down')
-                ->color(Color::Pink) 
+                ->color('success')
                 ->action(function () {
-                    $data = \App\Models\PembelianBahanBaku::all();
-                    $pdf = Pdf::loadView('pdf.pembelian', [
-                        'pembelian' => $data,
-                    ]);
+                    $pembelian = \App\Models\PembelianBahanBaku::all();
+                    $pdf = Pdf::loadView('pdf.pembelian', ['pembelian' => $pembelian]);
+
                     return response()->streamDownload(
                         fn () => print($pdf->output()),
                         'Pembelian Bahan Baku.pdf'
@@ -260,18 +262,23 @@ class PembelianBahanBakuResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),]),
-                Tables\Actions\BulkAction::make('downloadBulkInvoice')
-                    ->label('Cetak Invoice')
-                    ->icon('heroicon-o-printer')
-                    ->color(Color::Pink) 
-                    ->action(function (\Illuminate\Database\Eloquent\Collection $records) {
-                        $pdf = Pdf::loadView('pdf.invoice_pembelian', [
-                        'records' => $records,]);
-                            return response()->streamDownload( fn () => print($pdf->output()),'bulk-invoice-pembelian.pdf');
-                            }),
-            ]);
-            
+                Tables\Actions\BulkAction::make('kirimEmailMassal')
+                        ->label('Kirim Email Invoice')
+                        ->icon('heroicon-o-envelope')
+                        ->color('rose')
+                        ->requiresConfirmation()
+                        ->action(function (\Illuminate\Support\Collection $records) {
+                            foreach ($records as $record) {
+                                \App\Http\Controllers\PengirimanEmailController::prosesKirimEmail($record->id);
+                            }
 
+                            \Filament\Notifications\Notification::make()
+                                ->title('Email berhasil dikirim')
+                                ->success()
+                                ->send();
+                        }),
+                ]); 
+            
     }
     public static function getRelations(): array
     {

@@ -26,6 +26,7 @@ class PenjualanResource extends Resource
     protected static ?string $modelLabel = 'Penjualan';
 
     protected static ?string $pluralModelLabel = 'Penjualan';
+     protected static ?string $navigationGroup = 'Transaksi';
 
     public static function form(Form $form): Form
     {
@@ -450,7 +451,7 @@ class PenjualanResource extends Resource
 
         $params = [
             'transaction_details' => [
-                'order_id' => 'ORDER-' . $record->id,
+                'order_id' => 'ORDER-' . $record->id . '-' . time(),
                 'gross_amount' => $record->total_harga,
             ],
         ];

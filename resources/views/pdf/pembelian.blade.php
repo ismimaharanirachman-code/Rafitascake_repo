@@ -1,175 +1,95 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Laporan Pembelian Bahan Baku - Rafita's Cake and Bakery</title>
+    <title>Pembelian Bahan Baku</title>
     <style>
-        @page {
-            margin: 1.5cm;
-        }
-        body { 
-            font-family: 'Helvetica', 'Arial', sans-serif; 
-            color: #444; 
-            background-color: #fff;
-            line-height: 1.6;
-        }
-
-        .header-container {
-            text-align: center; 
-            border-bottom: 3px solid #db2777; 
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .header-container h2 { 
+        @page { margin: 100px 25px; }
+        body {
+            font-family: 'Nunito', 'Helvetica', sans-serif;
+            color: #4a4a4a;
             margin: 0;
+            padding: 0;
+        }
+        h2 {
+            color: #f472b6; /* Pink Lucu (Pink 400) */
+            text-align: center;
             font-size: 24px;
-            color: #be185d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
         }
-
-        .header-container p {
-            margin: 5px 0 0;
-            font-size: 14px;
-            color: #f472b6; 
-            font-weight: bold;
-        }
-
-        .doc-info {
+        table {
             width: 100%;
-            margin-bottom: 20px;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        th {
+            background-color: #fce7f3; /* Pink sangat muda (Pink 100) */
+            color: #be185d; /* Teks Maroon Pink */
+            padding: 15px;
+            text-transform: uppercase;
             font-size: 11px;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #fbcfe8;
+        }
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #fdf2f8;
+            font-size: 12px;
             color: #666;
         }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            margin-bottom: 30px;
+        /* Baris selang-seling yang halus */
+        tbody tr:nth-child(even) {
+            background-color: #fffafb;
         }
-        
-        th { 
-            background-color: #be185d; 
-            color: #ffffff; 
-            padding: 12px 10px;
-            font-size: 11px;
-            text-transform: uppercase;
-            border: 1px solid #be185d;
+        .text-right {
+            text-align: right;
         }
-        
-        td { 
-            padding: 10px; 
-            text-align: center;
-            font-size: 11px;
-            border: 1px solid #fbcfe8;
-        }
-
-        tr:nth-child(even) {
-            background-color: #fff1f2;
-        }
-
-        .total-row {
-            background-color: #fce7f3 !important;
-            font-weight: bold;
-            color: #be185d;
-        }
-
-        .signature-section {
-            margin-top: 50px;
-            width: 100%;
-        }
-
-        .signature-box {
-            float: right;
-            width: 200px;
-            text-align: center;
-            font-size: 12px;
-        }
-
-        .signature-space {
-            height: 80px;
-        }
-
-        .footer-note {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            font-size: 9px;
-            color: #f472b6;
-            border-top: 1px solid #fbcfe8;
-            padding-top: 5px;
-        }
-
-        /* Warna Status */
-        .status-badge {
-            font-weight: bold;
-            text-transform: uppercase;
-            font-size: 9px;
+        .footer {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 10px;
+            color: #f9a8d4;
         }
     </style>
 </head>
 <body>
-
-    <div class="header-container">
-        <h2>Rafita's Cake and Bakery</h2>
-        <p>Laporan Pembelian Bahan Baku</p>
-    </div>
-
-    <table class="doc-info">
-        <tr>
-            <td style="text-align: left; border: none; padding: 0;">Dicetak pada: {{ now()->translatedFormat('d F Y') }}</td>
-        </tr>
-    </table>
-
+    <h2>Pembelian Bahan Baku</h2>
+    
     <table>
         <thead>
             <tr>
-                <th width="5%">No</th>
                 <th>Kode</th>
-                <th>Tanggal</th>
+                <th>Tanggal Pembelian</th>
                 <th>Supplier</th>
-                <th>Metode</th>
-                <th>Status</th> 
-                <th>Total Nominal</th>
+                <th class="text-right">Total Transaksi</th>
             </tr>
         </thead>
         <tbody>
-            @php $grandTotal = 0; @endphp
-            @foreach($pembelian as $index => $item)
+            @foreach($pembelian as $item)
             <tr>
-                <td>{{ $index + 1 }}</td>
-                <td style="font-weight: bold;">{{ $item->kode_pembelian }}</td>
-                <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d/m/Y') }}</td>
-                <td style="text-align: left;">{{ $item->supplier->Nama_Supplier ?? '-' }}</td>
-                <td>{{ $item->payment_method }}</td>
-                <td class="status-badge" style="color: {{ $item->status_pembayaran == 'Lunas' ? '#16a34a' : '#dc2626' }}">
-                    {{ $item->status_pembayaran }}
-                </td>
-                <td style="text-align: right;">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                <tbody>
+    @foreach($pembelian as $item)
+    <tr>
+        <td style="font-weight: bold; color: #db2777;">{{ $item->kode_pembelian }}</td>
+        <td>{{ $item->created_at->format('d M Y') }}</td>
+        
+        
+        <td>{{ $item->supplier->nama_supplier ?? $item->supplier->Nama_Supplier ?? '-' }}</td>
+        
+        <td class="text-right" style="color: #be185d; font-weight: bold;">
+            
+            Rp {{ number_format($item->total ?? $item->total_harga ?? 0, 0, ',', '.') }}
+        </td>
+    </tr>
+    @endforeach
+</tbody>
             </tr>
-            @php $grandTotal += $item->total; @endphp
             @endforeach
         </tbody>
-        <tfoot>
-            <tr class="total-row">
-                <td colspan="6" style="text-align: right; border: 1px solid #fbcfe8;">TOTAL KESELURUHAN</td>
-                <td style="text-align: right; border: 1px solid #fbcfe8;">Rp {{ number_format($grandTotal, 0, ',', '.') }}</td>
-            </tr>
-        </tfoot>
     </table>
 
-    <div class="signature-section">
-        <div class="signature-box">
-            <p>Bogor, {{ now()->translatedFormat('d F Y') }}</p>
-            <p>Disetujui oleh,</p>
-            <div class="signature-space"></div>
-            <p><strong>____________________</strong></p>
-            <p>Manager Operasional</p>
-        </div>
-        <div style="clear: both;"></div>
-    </div>
 </body>
 </html>

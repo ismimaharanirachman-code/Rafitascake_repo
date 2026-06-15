@@ -6,27 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('pegawai', function (Blueprint $table) {
+        if (!Schema::hasColumn('pegawai', 'gaji')) {
 
-            $table->integer('gaji')->default(0);
+            Schema::table('pegawai', function (Blueprint $table) {
+                $table->integer('gaji')->default(0);
+            });
 
-        });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('pegawai', function (Blueprint $table) {
+        if (Schema::hasColumn('pegawai', 'gaji')) {
 
-            $table->dropColumn('gaji');
+            Schema::table('pegawai', function (Blueprint $table) {
+                $table->dropColumn('gaji');
+            });
 
-        });
+        }
     }
 };

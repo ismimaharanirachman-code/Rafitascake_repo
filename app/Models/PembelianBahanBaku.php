@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PembelianBahanBaku extends Model
 {
     use HasFactory;
-<<<<<<< Updated upstream
 
     protected $table = 'pembelian_bahan_baku';
 
@@ -43,6 +42,3 @@ class PembelianBahanBaku extends Model
         return $this->hasMany(DetailPembelian::class);
     }
 }
-=======
-}
->>>>>>> Stashed changes

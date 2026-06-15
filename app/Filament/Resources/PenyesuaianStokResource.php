@@ -19,7 +19,7 @@ class PenyesuaianStokResource extends Resource
     protected static ?string $model            = PenyesuaianStok::class;
     protected static ?string $navigationIcon   = 'heroicon-o-arrow-path';
     protected static ?string $navigationLabel  = 'Penyesuaian Stok';
-    protected static ?string $navigationGroup  = 'Manajemen Stok';
+    protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $modelLabel       = 'Penyesuaian Stok';
     protected static ?string $pluralModelLabel = 'Penyesuaian Stok';
     protected static ?int    $navigationSort   = 2;
@@ -89,9 +89,7 @@ class PenyesuaianStokResource extends Resource
                         ->required()
                         ->suffix('pcs')
                         ->live(debounce: 500)
-                        ->afterStateUpdated(function (Set $set, ?int $state) {
-                            $set('stok_sesudah', (int) $state);
-                        }),
+                        ,
 
                     Forms\Components\TextInput::make('stok_sesudah')
                         ->label('Stok Setelah Dikoreksi')

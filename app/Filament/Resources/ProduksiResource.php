@@ -28,6 +28,7 @@ class ProduksiResource extends Resource
     //Tambahkan ini untuk menghilangkan s
     protected static ?string $modelLabel = 'Produksi';
     protected static ?string $pluralModelLabel = 'Produksi';
+     protected static ?string $navigationGroup = 'Transaksi';
 
     public static function form(Form $form): Form
     {
