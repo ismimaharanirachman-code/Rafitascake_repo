@@ -24,8 +24,8 @@ class PenggajianPegawai extends Model
     'potongan',
     'total_gaji',
     'metode_pembayaran',
-    'status_pembayaran',
     'keterangan',
+    'status_pembayaran',  // TAMBAHKAN INI
 ];
 
     public function pegawai(): BelongsTo

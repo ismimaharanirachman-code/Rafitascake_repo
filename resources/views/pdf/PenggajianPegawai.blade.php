@@ -12,6 +12,11 @@
         .text-center { text-align: center; }
         .font-bold { font-weight: bold; }
     </style>
+    <style>
+        @page {
+            size:a4 potrait;
+        }
+        </style>
 </head>
 <body>
     <h2 style="text-align: center;">LAPORAN PENGGAJIAN PEGAWAI</h2>
