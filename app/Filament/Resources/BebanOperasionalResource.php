@@ -101,7 +101,7 @@ class BebanOperasionalResource extends Resource
                     $BebanOperasional = BebanOperasional::all();
 
                     $pdf = Pdf::loadView('pdf.BebanOperasional', ['BebanOperasional' => $BebanOperasional]);
-
+                        
                     return response()->streamDownload(
                         fn () => print($pdf->output()),
                         'BebanOperasional-list.pdf'
