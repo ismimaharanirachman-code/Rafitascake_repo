@@ -4,6 +4,8 @@ namespace App\Filament\Resources\PembelianBahanBakuResource\Pages;
 
 use App\Filament\Resources\PembelianBahanBakuResource;
 use Filament\Resources\Pages\CreateRecord;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class CreatePembelianBahanBaku extends CreateRecord
 {
@@ -19,5 +21,24 @@ class CreatePembelianBahanBaku extends CreateRecord
         }
         $data['total'] = $total;
         return $data;
+    }
+    protected function afterCreate(): void
+    {
+        $record = $this->record;
+        $details = $record->detailPembelian; 
+    
+
+        $pdf = Pdf::loadView('pdf.invoice_pembelian', [
+            'record' => $record,
+            'details' => $details 
+        ]);
+
+        Mail::send('emails.pembelian', ['data' => $record], function ($message) use ($record, $pdf) {
+            $message->to('pembelian@example.com')
+                ->subject('Invoice Pembelian Bahan Baku - ' . $record->tanggal)
+                ->attachData($pdf->output(), 'Invoice-' . $record->kode_pembelian . '.pdf', [
+                    'mime' => 'application/pdf',
+                ]);
+        });
     }
 }

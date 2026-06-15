@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PembelianBahanBakuResource\Pages;
 use App\Models\PembelianBahanBaku;
-
 use Filament\Forms\Form;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -26,7 +25,7 @@ use Illuminate\Support\Facades\Storage;
 class PembelianBahanBakuResource extends Resource
 {
     protected static ?string $model = PembelianBahanBaku::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationLabel = 'Pembelian Bahan Baku';
     protected static ?string $navigationGroup = 'Transaksi';
     protected static ?string $pluralModelLabel = 'Pembelian Bahan Baku';
@@ -259,6 +258,7 @@ class PembelianBahanBakuResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                 Tables\Actions\DeleteBulkAction::make(),]),
