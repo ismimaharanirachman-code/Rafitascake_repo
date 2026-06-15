@@ -12,6 +12,5 @@ class BebanOperasional extends Model
     'coa_id',
     'nominal',
     'lampiran',
-    'keterangan',
-];
+    'keterangan',];
 }

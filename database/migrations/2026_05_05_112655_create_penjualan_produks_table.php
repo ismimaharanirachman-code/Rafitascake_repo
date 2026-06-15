@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('penjualan_produk', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('penjualan_id')->constrained('penjualan')->cascadeOnDelete();
-            $table->unsignedBigInteger('produk_id');
+            $table->foreignId('penjualan_id')
+                ->constrained('penjualan')
+                ->cascadeOnDelete();
 
-            $table->foreign('produk_id')
-                ->references('id')
-                ->on('produk')
+            $table->foreignId('produk_id')
+                ->constrained('produk')
                 ->cascadeOnDelete();
 
             $table->integer('qty');
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penjualan_produks');
+        Schema::dropIfExists('penjualan_produk');
     }
 };
