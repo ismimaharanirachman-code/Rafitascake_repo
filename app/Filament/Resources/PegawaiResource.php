@@ -30,11 +30,8 @@ class PegawaiResource extends Resource
 
     protected static ?string $navigationGroup = 'Master Data';
 
-<<<<<<< Updated upstream
-=======
-     //Tambahkan ini untuk menghilangkan s
->>>>>>> Stashed changes
     protected static ?string $modelLabel = 'Pegawai';
+
     protected static ?string $pluralModelLabel = 'Pegawai';
 
     public static function form(Form $form): Form

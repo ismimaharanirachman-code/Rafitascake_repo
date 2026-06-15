@@ -16,7 +16,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 
-
 class SupplierResource extends Resource
 {
     protected static ?string $model = Supplier::class;
@@ -27,26 +26,27 @@ class SupplierResource extends Resource
 
     protected static ?string $navigationLabel = 'Supplier';
 
-<<<<<<< Updated upstream
-=======
-    //Tambahkan ini untuk menghilangkan s
->>>>>>> Stashed changes
     protected static ?string $modelLabel = 'Supplier';
+
     protected static ?string $pluralModelLabel = 'Supplier';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                 TextInput::make('Nama_Supplier')
+
+                TextInput::make('Nama_Supplier')
                     ->label('Nama Supplier')
                     ->required(),
+
                 TextInput::make('No_HP')
-                    ->tel() 
+                    ->tel()
                     ->required(),
+
                 Textarea::make('Alamat')
                     ->label('Alamat')
                     ->required(),
+
             ]);
     }
 
@@ -54,12 +54,16 @@ class SupplierResource extends Resource
     {
         return $table
             ->columns([
+
                 TextColumn::make('Nama_Supplier')
                     ->label('Nama Supplier')
                     ->searchable(),
+
                 TextColumn::make('No_HP'),
+
                 TextColumn::make('Alamat')
                     ->label('Alamat'),
+
             ])
             ->filters([
                 //
@@ -86,7 +90,6 @@ class SupplierResource extends Resource
         return [
             'index' => Pages\ListSupplier::route('/'),
             'create' => Pages\CreateSupplier::route('/create'),
-          
         ];
     }
 }
