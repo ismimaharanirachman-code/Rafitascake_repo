@@ -56,6 +56,7 @@ class ProdukResource extends Resource
 
                 TextInput::make('harga_jual')
                     ->label('Harga Jual')
+                    ->label('harga jual')
                     ->numeric()
                     ->prefix('Rp')
                     ->required(),
@@ -114,7 +115,53 @@ class ProdukResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    {
+        
     }
+
+    return $table
+        ->contentGrid([
+            'md' => 2,
+            'xl' => 3,
+        ])
+        ->columns([
+            ImageColumn::make('gambar')
+                ->disk('public')
+                ->width(80)
+                ->height(80)
+                ->square()
+                ->url(fn ($record) => asset('storage/' . $record->gambar)),
+
+            TextColumn::make('nama_kue')
+                ->label('nama kue')
+                ->searchable(),
+
+            TextColumn::make('jenis_kue')
+                ->label('jenis kue'),
+
+            TextColumn::make('harga_jual')
+                ->label('harga')
+                ->money('IDR')
+                ->sortable(),
+
+            TextColumn::make('stok')
+                ->label('stok')
+                ->sortable(),
+
+            TextColumn::make('tanggal_produksi')
+                ->label('tanggal produksi')
+                ->date(),
+        ])
+        ->filters([])
+        ->actions([
+            Tables\Actions\EditAction::make(),
+        ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]),
+        ]);
+}
 
     public static function getPages(): array
     {

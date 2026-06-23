@@ -6,6 +6,8 @@ use App\Filament\Resources\PembelianBahanBakuResource;
 use Filament\Resources\Pages\CreateRecord;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Jurnal;
+use App\Models\JurnalDetail;
 
 class CreatePembelianBahanBaku extends CreateRecord
 {
@@ -25,7 +27,33 @@ class CreatePembelianBahanBaku extends CreateRecord
     protected function afterCreate(): void
     {
         $record = $this->record;
-        $details = $record->detailPembelian; 
+        $details = $record->detailPembelian;
+        
+        // ==========================
+// JURNAL OTOMATIS PEMBELIAN
+// ==========================
+
+$jurnal = Jurnal::create([
+    'tanggal' => $record->tanggal,
+    'keterangan' => 'Pembelian Bahan Baku',
+]);
+
+$total = $record->detailPembelian()->sum('subtotal');
+// Debit Persediaan Bahan Baku
+JurnalDetail::create([
+    'jurnal_id' => $jurnal->id,
+    'akun' => 'Persediaan Bahan Baku',
+    'debit' => $total,
+    'kredit' => 0,
+]);
+
+// Kredit Kas
+JurnalDetail::create([
+    'jurnal_id' => $jurnal->id,
+    'akun' => 'Kas',
+    'debit' => 0,
+    'kredit' => $total,
+]);
     
 
         $pdf = Pdf::loadView('pdf.invoice_pembelian', [

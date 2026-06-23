@@ -7,6 +7,7 @@ use App\Models\Produk;
 use App\Models\PenyesuaianStok;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -58,10 +59,12 @@ class PenyesuaianStokResource extends Resource
                         ->searchable()
                         ->required()
                         ->live()
-                        ->afterStateUpdated(function (Set $set, ?int $state) {
+                        ->afterStateUpdated(function (Get $get, Set $set, ?int $state) {
                             if ($state) {
                                 $produk = Produk::find($state);
-                                $set('stok_sebelum', $produk?->stok ?? 0);
+                                $stokSebelum = $produk?->stok ?? 0;
+                                $set('stok_sebelum', $stokSebelum);
+                                $set('stok_sesudah', $stokSebelum - (int) $get('jumlah'));
                             }
                         }),
 
@@ -82,14 +85,18 @@ class PenyesuaianStokResource extends Resource
                 ->schema([
 
                     Forms\Components\TextInput::make('jumlah')
-                        ->label('Jumlah Stok Sebenarnya')
-                        ->helperText('Isi dengan jumlah stok fisik yang ada sekarang')
+                        ->label('Jumlah Pengurangan Stok')
+                        ->helperText('Isi dengan jumlah stok yang berkurang (rusak, basi, hilang, dll)')
                         ->numeric()
                         ->minValue(0)
                         ->required()
                         ->suffix('pcs')
                         ->live(debounce: 500)
-                        ,
+                        ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                            $stokSebelum = (int) $get('stok_sebelum');
+                            $jumlah      = (int) $state;
+                            $set('stok_sesudah', $stokSebelum - $jumlah);
+                        }),
 
                     Forms\Components\TextInput::make('stok_sesudah')
                         ->label('Stok Setelah Dikoreksi')
