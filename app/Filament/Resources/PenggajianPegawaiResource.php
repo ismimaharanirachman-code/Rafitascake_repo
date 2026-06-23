@@ -202,10 +202,16 @@ class PenggajianPegawaiResource extends Resource
                     ->icon('heroicon-o-document-text')
                     ->color('success')
                     ->action(function (PenggajianPegawai $record) {
-                        $pdf = Pdf::loadView('pdf.invoice_gaji', ['record' => $record]);
+
+                        $record->load('pegawai.jabatan'); // <-- PENTING
+
+                        $pdf = Pdf::loadView('pdf.invoice_gaji', [
+                            'record' => $record,
+                        ]);
+
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
-                            'Invoice-' . ($record->id_penggajian ?? $record->id) . '.pdf'
+                            'Invoice-' . $record->id_penggajian . '.pdf'
                         );
                     }),
             ])
@@ -216,7 +222,7 @@ class PenggajianPegawaiResource extends Resource
                     ->color('warning')
                     ->action(function () {
                         $data = PenggajianPegawai::all();
-                        $pdf = Pdf::loadView('pdf.PenggajianPegawai', ['PenggajianPegawai' => $data]);
+                        Pdf::loadView('pdf.PenggajianPegawai', ['PenggajianPegawai' => $data]);
                         return response()->streamDownload(
                             fn () => print($pdf->output()),
                             'Laporan-Seluruh-Penggajian.pdf'

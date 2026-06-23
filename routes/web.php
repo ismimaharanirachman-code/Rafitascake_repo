@@ -29,6 +29,9 @@ Route::resource('supplier', SupplierController::class);
 use App\Http\Controllers\PegawaiController;
 Route::resource('Pegawai', PegawaiController::class);
 
+use App\Http\Controllers\JabatanController;
+Route::resource('jabatan', JabatanController::class);
+
 use App\Http\Controllers\CoaController;
 Route::resource('coa', CoaController::class);
 
@@ -37,6 +40,13 @@ Route::resource('Produk', ProdukController::class);
 
 use App\Http\Controllers\PengirimanEmailController;
 Route::get('/kirim-email/{id}',[PengirimanEmailController::class, 'prosesKirimEmail']);
+
+// Pastikan impor di baris paling atas menggunakan nama yang benar:
+use App\Http\Controllers\OcrController;
+
+Route::get('/ocr', [OcrController::class, 'index'])->name('ocr.index');
+Route::post('/ocr/process', [OcrController::class, 'process'])->name('ocr.process');
+Route::post('/ocr/store-pegawai', [OcrController::class, 'storePegawai'])->name('ocr.store-pegawai');
 
 use App\Models\Penjualan;
 use Barryvdh\DomPDF\Facade\Pdf;

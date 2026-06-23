@@ -79,7 +79,6 @@
             display: table-cell;
             font-weight: bold;
             font-size: 16px;
-            color: #333;
         }
         .total-value {
             display: table-cell;
@@ -107,82 +106,100 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>RAFITAS CAKE</h1>
-            <p>Jl. Sholeh Iskandar No.2, RT.02/RW.11, Kedungbadak, Tanah Sareal, Kota Bogor, Jawa Barat 16164</p>
-            <p>Email: info@rafitascake.com | Telp: (0251) 1234567</p>
-        </div>
+@php
+    $pegawai = $record->pegawai;
+    $jabatan = $pegawai->jabatan ?? null;
+@endphp
 
-        <div class="slip-title">Slip Gaji Pegawai</div>
+<div class="container">
 
-        <table class="info-table">
+    <div class="header">
+        <h1>RAFITAS CAKE</h1>
+        <p>Jl. Sholeh Iskandar No.2, RT.02/RW.11, Kedungbadak, Bogor</p>
+        <p>Email: info@rafitascake.com | Telp: (0251) 1234567</p>
+    </div>
+
+    <div class="slip-title">Slip Gaji Pegawai</div>
+
+    <table class="info-table">
+        <tr>
+            <td>ID Slip</td>
+            <td>: <strong>{{ $record->id_penggajian }}</strong></td>
+            <td>Periode</td>
+            <td>: {{ $record->periode_gaji }}</td>
+        </tr>
+        <tr>
+            <td>Nama</td>
+            <td>: {{ $pegawai->nama_pegawai ?? '-' }}</td>
+            <td>Tgl Bayar</td>
+            <td>: {{ \Carbon\Carbon::parse($record->tanggal_gaji)->translatedFormat('d F Y') }}</td>
+        </tr>
+        <tr>
+            <td>Jabatan</td>
+            <td>: {{ $jabatan->nama_jabatan ?? '-' }}</td>
+            <td>Metode</td>
+            <td>: {{ $record->metode_pembayaran }}</td>
+        </tr>
+    </table>
+
+    <table class="main-table">
+        <thead>
             <tr>
-                <td style="width: 15%;">ID Slip</td>
-                <td style="width: 35%;">: <strong>{{ $record->id_penggajian }}</strong></td>
-                <td style="width: 15%;">Periode</td>
-                <td style="width: 35%;">: {{ $record->periode_gaji }}</td>
+                <th>DESKRIPSI</th>
+                <th style="text-align:right;">NOMINAL</th>
             </tr>
+        </thead>
+        <tbody>
             <tr>
-                <td>Nama</td>
-                <td>: {{ $record->pegawai->nama_pegawai ?? '-' }}</td>
-                <td>Tgl Bayar</td>
-                <td>: {{ \Carbon\Carbon::parse($record->tanggal_gaji)->translatedFormat('d F Y') }}</td>
+                <td>Gaji Pokok</td>
+                <td style="text-align:right;">
+                    Rp {{ number_format($jabatan->gaji_pokok ?? 0, 0, ',', '.') }}
+                </td>
             </tr>
+
             <tr>
-                <td>Jabatan</td>
-                <td>: {{ $record->pegawai->jabatan ?? '-' }}</td>
-                <td>Metode</td>
-                <td>: {{ $record->metode_pembayaran }}</td>
+                <td>Tunjangan</td>
+                <td style="text-align:right;">
+                    Rp {{ number_format($record->tunjangan ?? 0, 0, ',', '.') }}
+                </td>
             </tr>
-        </table>
 
-        <table class="main-table">
-            <thead>
-                <tr>
-                    <th>DESKRIPSI PENDAPATAN & POTONGAN</th>
-                    <th style="text-align: right;">NOMINAL</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Gaji Pokok</td>
-                    <td style="text-align: right;">Rp {{ number_format($record->gaji_pokok, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td>Tunjangan Jabatan / Transport</td>
-                    <td style="text-align: right;">Rp {{ number_format($record->tunjangan, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
-                    <td style="color: #e11d48;">Potongan (BPJS/Absensi/Lainnya)</td>
-                    <td style="text-align: right; color: #e11d48;">- Rp {{ number_format($record->potongan, 0, ',', '.') }}</td>
-                </tr>
-            </tbody>
-        </table>
+            <tr>
+                <td style="color:#e11d48;">Potongan</td>
+                <td style="text-align:right;color:#e11d48;">
+                    - Rp {{ number_format($record->potongan ?? 0, 0, ',', '.') }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-        <div class="total-section">
-            <div class="total-row">
-                <div class="total-label">TOTAL GAJI BERSIH (TAKE HOME PAY)</div>
-                <div class="total-value">Rp {{ number_format($record->total_gaji, 0, ',', '.') }}</div>
+    <div class="total-section">
+        <div class="total-row">
+            <div class="total-label">TOTAL GAJI BERSIH</div>
+            <div class="total-value">
+                Rp {{ number_format($record->total_gaji ?? 0, 0, ',', '.') }}
             </div>
-        </div>
-
-        <div class="footer">
-            <div class="signature-box">
-                <p>Bogor, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
-                <p>Bendahara Operasional,</p>
-                <br><br><br>
-                <p><strong>( ____________________ )</strong></p>
-                <p>Noor Rafita (CEO Rafitas Cake)</p>
-            </div>
-        </div>
-
-        <div style="clear: both;"></div>
-        
-        <div class="footer-note">
-            *Ini adalah dokumen sah yang dihasilkan secara komputerisasi, tanda tangan hanya sebagai pelengkap administrasi.
         </div>
     </div>
+
+    <div class="footer">
+        <div class="signature-box">
+            <p>Bogor, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
+            <p>Bendahara Operasional</p>
+            <br><br><br>
+            <p>(____________________)</p>
+            <p>Noor Rafita</p>
+        </div>
+    </div>
+
+    <div style="clear: both;"></div>
+
+    <div class="footer-note">
+        *Dokumen ini dihasilkan otomatis oleh sistem dan sah tanpa tanda tangan basah.
+    </div>
+
+</div>
 </body>
 </html>
