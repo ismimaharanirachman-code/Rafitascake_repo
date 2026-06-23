@@ -4,6 +4,8 @@ namespace App\Filament\Resources\PenjualanResource\Pages;
 
 use App\Filament\Resources\PenjualanResource;
 use App\Models\Produk;
+use App\Models\Jurnal;
+use App\Models\JurnalDetail;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Notifications\Notification;
 use Midtrans\Config;
@@ -71,37 +73,66 @@ class CreatePenjualan extends CreateRecord
 
 // 🔥 KURANGI STOK + MIDTRANS
     protected function afterCreate(): void
-    {
-        $penjualan = $this->record;
+{
+    $penjualan = $this->record;
 
-        foreach ($penjualan->detail as $item) {
-            $produk = Produk::find($item->produk_id);
-            if ($produk) {
-                $produk->decrement('stok', (int) $item->qty);
-            }
-        }
+    // Kurangi stok
+    foreach ($penjualan->detail as $item) {
+        $produk = Produk::find($item->produk_id);
 
-        // 🔥 QRIS MIDTRANS
-        if ($penjualan->metode_pembayaran == 'qris') {
-
-            Config::$serverKey = config('services.midtrans.server_key');
-            Config::$isProduction = false;
-            Config::$isSanitized = true;
-            Config::$is3ds = true;
-
-            $params = [
-                'transaction_details' => [
-                    // Tambahkan timestamp (now()->timestamp) agar ID unik setiap kali request
-                    'order_id' => 'ORDER-' . $penjualan->id . '-' . now()->timestamp,
-                    'gross_amount' => (int) $penjualan->total_harga,
-                ],
-            ];
-
-            $snapToken = Snap::getSnapToken($params);
-
-            session()->put('snapToken', $snapToken);
+        if ($produk) {
+            $produk->decrement('stok', (int) $item->qty);
         }
     }
+
+    // ==========================
+    // JURNAL OTOMATIS PENJUALAN
+    // ==========================
+
+    $jurnal = Jurnal::create([
+        'tanggal' => $penjualan->tanggal,
+        'keterangan' => 'Penjualan No. ' . $penjualan->no_nota,
+    ]);
+
+    // Debit Kas
+    JurnalDetail::create([
+        'jurnal_id' => $jurnal->id,
+        'akun' => 'Kas',
+        'debit' => $penjualan->total_harga,
+        'kredit' => 0,
+    ]);
+
+    // Kredit Pendapatan Penjualan
+    JurnalDetail::create([
+        'jurnal_id' => $jurnal->id,
+        'akun' => 'Pendapatan Penjualan',
+        'debit' => 0,
+        'kredit' => $penjualan->total_harga,
+    ]);
+
+    // ==========================
+    // QRIS MIDTRANS
+    // ==========================
+
+    if ($penjualan->metode_pembayaran == 'qris') {
+
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => 'ORDER-' . $penjualan->id . '-' . now()->timestamp,
+                'gross_amount' => (int) $penjualan->total_harga,
+            ],
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        session()->put('snapToken', $snapToken);
+    }
+}
     protected function getRedirectUrl(): string
     {
         if ($this->record->metode_pembayaran == 'qris') {
