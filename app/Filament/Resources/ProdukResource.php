@@ -9,7 +9,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-// Import komponen agar tidak error
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
@@ -25,13 +24,12 @@ class ProdukResource extends Resource
 {
     protected static ?string $model = Produk::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cake'; // Icon kue
+    protected static ?string $navigationIcon = 'heroicon-o-cake';
 
     protected static ?string $navigationLabel = 'Produk';
     
     protected static ?string $navigationGroup = 'Master Data';
 
-     //Tambahkan ini untuk menghilangkan s
     protected static ?string $modelLabel = 'Produk';
     protected static ?string $pluralModelLabel = 'Produk';
 
@@ -39,7 +37,6 @@ class ProdukResource extends Resource
     {
         return $form
             ->schema([
-                
                 TextInput::make('nama_kue')
                     ->label('nama kue')
                     ->required(),
@@ -54,7 +51,7 @@ class ProdukResource extends Resource
                     ->required(),
                 TextInput::make('harga_jual')
                     ->label('harga jual')
-                    ->numeric() // Supaya hanya bisa input angka
+                    ->numeric()
                     ->prefix('Rp')
                     ->required(),
                 TextInput::make('stok')
@@ -75,12 +72,18 @@ class ProdukResource extends Resource
     {
         return $table
             ->columns([
+                // ✅ Gambar dipindah ke posisi pertama (kiri)
+                ImageColumn::make('gambar')
+                        ->disk('public')
+                        ->width(80)
+                        ->height(80)
+                        ->square()
+                        ->url(fn ($record) => asset('storage/' . $record->gambar)),
                 TextColumn::make('nama_kue')->label('nama kue')->searchable(),
                 TextColumn::make('jenis_kue')->label('jenis kue'),
                 TextColumn::make('harga_jual')->label('harga')->money('IDR')->sortable(),
                 TextColumn::make('stok')->label('stok')->sortable(),
                 TextColumn::make('tanggal_produksi')->label('tanggal produksi')->date(),
-                ImageColumn::make('gambar')->disk('public')
             ])
             ->filters([])
             ->actions([
