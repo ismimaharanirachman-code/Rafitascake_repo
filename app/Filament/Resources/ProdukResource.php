@@ -70,7 +70,11 @@ class ProdukResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return $table
+    return $table
+        ->contentGrid([
+            'md' => 2,
+            'xl' => 3,
+        ])
             ->columns([
                 // ✅ Gambar dipindah ke posisi pertama (kiri)
                 ImageColumn::make('gambar')
@@ -85,6 +89,33 @@ class ProdukResource extends Resource
                 TextColumn::make('stok')->label('stok')->sortable(),
                 TextColumn::make('tanggal_produksi')->label('tanggal produksi')->date(),
             ])
+    ImageColumn::make('gambar')
+    ->disk('public')
+    ->height(150)
+    ->width(150),
+
+    TextColumn::make('nama_kue')
+        ->label('Nama Kue')
+        ->searchable()
+        ->weight('bold')
+        ->size('lg'),
+
+    TextColumn::make('jenis_kue')
+        ->badge(),
+
+    TextColumn::make('harga_jual')
+        ->label('Harga')
+        ->money('IDR')
+        ->weight('bold'),
+
+    TextColumn::make('stok')
+        ->badge()
+        ->color('success'),
+
+    TextColumn::make('tanggal_produksi')
+        ->label('Tanggal Produksi')
+        ->date('d M Y'),
+])
             ->filters([])
             ->actions([
                 Tables\Actions\EditAction::make(),
