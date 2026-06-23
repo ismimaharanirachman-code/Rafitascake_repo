@@ -9,16 +9,14 @@ class Pegawai extends Model
 {
     use HasFactory;
 
-    // Memberitahu Laravel bahwa nama tabelnya 'pegawai' (bukan 'pegawais')
     protected $table = 'pegawai';
 
-    // Memberitahu Laravel bahwa primary key-nya 'id_pegawai' (bukan 'id')
     protected $primaryKey = 'id_pegawai';
 
-    // Jika id_pegawai bukan auto-increment, ubah ke false (tapi di migrasi kamu pakai ->id(), jadi ini biarkan true/default)
-    public $incrementing = true;
+    public $incrementing = false;
 
-    // Tambahkan field yang boleh diisi (mass assignment) agar bisa simpan data lewat Filament
+    protected $keyType = 'string';
+
     protected $fillable = [
         'id_pegawai',
         'nama_pegawai',
@@ -27,4 +25,19 @@ class Pegawai extends Model
         'no_hp',
         'gaji',
     ];
+
+    public function ktp()
+    {
+        return $this->belongsTo(Ktp::class, 'ktp_id', 'id');
+    }
+
+    // RELASI KE TABEL JABATAN
+    public function jabatan()
+    {
+        return $this->belongsTo(
+            Jabatan::class,
+            'jabatan',      // kolom di tabel pegawai
+            'id_jabatan'    // primary key tabel jabatan
+        );
+    }
 }

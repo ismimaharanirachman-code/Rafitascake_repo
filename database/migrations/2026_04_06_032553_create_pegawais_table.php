@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pegawai', function (Blueprint $table) {
-            $table->id('id_pegawai',10);
-            $table->string('nama_pegawai',50);
-            $table->string('jabatan',50);
-            $table->string('alamat_pegawai',100);
-            $table->string('no_hp',50);
-            $table->decimal('gaji', 15, 2)->default(0); // Gaji
-            $table->timestamps();
-        });
+    // Ubah dari $table->id() menjadi string
+    $table->string('id_pegawai', 20)->primary(); 
+    $table->string('nama_pegawai', 50);
+    $table->string('jabatan', 50);
+    $table->string('alamat_pegawai', 100);
+    $table->string('no_hp', 50);
+    $table->decimal('gaji', 15, 2)->default(0);
+    $table->timestamps();
+});
     }
 
     /**

@@ -84,10 +84,6 @@ class PegawaiResource extends Resource
 
                 TextColumn::make('id_pegawai')
                     ->label('Kode Pegawai')
-                    ->formatStateUsing(
-                        fn ($state) =>
-                        'PG' . str_pad($state, 3, '0', STR_PAD_LEFT)
-                    )
                     ->sortable(),
 
                 TextColumn::make('nama_pegawai')
