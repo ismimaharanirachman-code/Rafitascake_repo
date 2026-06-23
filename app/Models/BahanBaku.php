@@ -20,6 +20,14 @@ class BahanBaku extends Model
         'storage_location',
     ];
 
+
+
+    public function produksiDetails()
+    {
+    return $this->hasMany(ProduksiDetail::class);
+    }
+
+ 
     protected $casts = [
         'stok' => 'integer',
         'harga' => 'integer',

@@ -9,6 +9,8 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+
+// Import komponen agar tidak error
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
@@ -27,21 +29,23 @@ class ProdukResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-cake';
 
     protected static ?string $navigationLabel = 'Produk';
-    
     protected static ?string $navigationGroup = 'Master Data';
 
     protected static ?string $modelLabel = 'Produk';
+
     protected static ?string $pluralModelLabel = 'Produk';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+
                 TextInput::make('nama_kue')
-                    ->label('nama kue')
+                    ->label('Nama Kue')
                     ->required(),
+
                 Select::make('jenis_kue')
-                    ->label('jenis kue')
+                    ->label('Jenis Kue')
                     ->options([
                         'Kue Basah' => 'Kue Basah',
                         'Kue Kering' => 'Kue Kering',
@@ -49,18 +53,23 @@ class ProdukResource extends Resource
                         'Cake' => 'Cake',
                     ])
                     ->required(),
+
                 TextInput::make('harga_jual')
+                    ->label('Harga Jual')
                     ->label('harga jual')
                     ->numeric()
                     ->prefix('Rp')
                     ->required(),
+
                 TextInput::make('stok')
-                    ->label('stok')
+                    ->label('Stok')
                     ->numeric()
                     ->required(),
+
                 DatePicker::make('tanggal_produksi')
-                    ->label('tanggal produksi')
+                    ->label('Tanggal Produksi')
                     ->required(),
+
                 FileUpload::make('gambar')
                     ->image()
                     ->directory('produk')
@@ -69,7 +78,47 @@ class ProdukResource extends Resource
     }
 
     public static function table(Table $table): Table
-{
+    {
+        return $table
+            ->columns([
+
+                TextColumn::make('nama_kue')
+                    ->label('Nama Kue')
+                    ->searchable(),
+
+                TextColumn::make('jenis_kue')
+                    ->label('Jenis Kue'),
+
+                TextColumn::make('harga_jual')
+                    ->label('Harga')
+                    ->money('IDR
+                    ')
+                    ->sortable(),
+
+                TextColumn::make('stok')
+                    ->label('Stok')
+                    ->sortable(),
+
+                TextColumn::make('tanggal_produksi')
+                    ->label('Tanggal Produksi')
+                    ->date(),
+
+                ImageColumn::make('gambar')
+                    ->disk('public'),
+            ])
+            ->filters([])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    {
+        
+    }
+
     return $table
         ->contentGrid([
             'md' => 2,
