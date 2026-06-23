@@ -42,3 +42,6 @@ class PembelianBahanBaku extends Model
         return $this->hasMany(DetailPembelian::class);
     }
 }
+
+
+

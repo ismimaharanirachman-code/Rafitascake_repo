@@ -48,6 +48,10 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+                \App\Filament\Widgets\DashboardStats::class,
+                \App\Filament\Widgets\PenjualanProdukChart::class,
+                \App\Filament\Widgets\PenjualanPelangganChart::class,
+                \App\Filament\Widgets\PenjualanBulananChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

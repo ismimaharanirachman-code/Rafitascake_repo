@@ -199,6 +199,7 @@ class ProduksiResource extends Resource
                                 $produksi = Produksi::all();
 
                                 $pdf = Pdf::loadView('pdf.produksi', ['produksi' => $produksi]);
+                                
 
                                 return response()->streamDownload(
                                     fn () => print($pdf->output()),
